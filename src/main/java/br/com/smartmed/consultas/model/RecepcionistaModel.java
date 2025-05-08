@@ -41,9 +41,8 @@ public class RecepcionistaModel {
     @NotBlank(message = "A data de admissão não pode ficar em branco")
     private Date dataAdmissao;
 
-    @Column(name = "dataDemissao", nullable = false)
+    @Column(name = "dataDemissao", nullable = true)
     @Null(message = "A data de demissão não pode ser nula")
-    @NotBlank(message = "A data de demissão não pode ficar em branco")
     private Date dataDemissao;
 
     @Column(name = "telefone", nullable = false, length = 11)
