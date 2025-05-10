@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,4 +29,7 @@ public class EspecialidadeModel {
     @Null(message = "Descrição da especialidade não pode ser nula")
     @NotBlank(message = "Descrição da especialidade não pode estar em branco")
     private String descricao;
+
+    @OneToMany(mappedBy = "especialidade")
+    private Set<MedicoModel> medicos = new HashSet<>();
 }
