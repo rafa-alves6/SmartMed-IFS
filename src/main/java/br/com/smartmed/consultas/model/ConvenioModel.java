@@ -18,7 +18,7 @@ public class ConvenioModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "nome", length = 255, nullable = false)
     @NotNull(message = "Nome do convênio não pode ser nulo")

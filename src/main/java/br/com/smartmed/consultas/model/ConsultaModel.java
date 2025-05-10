@@ -18,7 +18,7 @@ public class ConsultaModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "dataHoraConsulta", nullable = false)
     @NotNull(message = "Data e hora da consulta não podem ser nulas")

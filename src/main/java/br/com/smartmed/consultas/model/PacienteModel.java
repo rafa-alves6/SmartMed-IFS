@@ -22,7 +22,7 @@ public class PacienteModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "nome", length = 255, nullable = false)
     @NotNull(message = "O nome não pode ser nulo.")

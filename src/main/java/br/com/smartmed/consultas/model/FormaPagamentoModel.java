@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class FormaPagamentoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "descricao", nullable = false, length = 64)
     @NotNull(message = "Descrição do pagamento não pode ser nula")

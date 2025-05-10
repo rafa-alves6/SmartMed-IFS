@@ -20,7 +20,7 @@ public class RecepcionistaModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "nome", nullable = false, length = 255)
     @NotNull(message = "O nome não pode ser nulo")

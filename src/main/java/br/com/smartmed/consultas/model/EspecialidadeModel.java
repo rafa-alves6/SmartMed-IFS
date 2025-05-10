@@ -18,7 +18,7 @@ import java.util.Set;
 public class EspecialidadeModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "nome", nullable = false, length = 64)
     @NotNull(message = "Nome da especialidade não pode ser nulo")
