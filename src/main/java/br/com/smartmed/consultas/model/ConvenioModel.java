@@ -3,7 +3,6 @@ package br.com.smartmed.consultas.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,7 @@ public class ConvenioModel {
     private int id;
 
     @Column(name = "nome", length = 255, nullable = false)
-    @Null(message = "Nome do convênio não pode ser nulo")
+    @NotNull(message = "Nome do convênio não pode ser nulo")
     @NotBlank(message = "Nome do convênio não pode ficar em branco")
     private String nome;
 
@@ -37,12 +36,12 @@ public class ConvenioModel {
     private String telefone;
 
     @Column(name = "email", length = 64, nullable = false, unique = true)
-    @Null(message = "O email não pode ser nulo")
+    @NotNull(message = "O email não pode ser nulo")
     @NotBlank(message = "O email não pode ficar em branco")
     private String email;
 
     @Column(name = "ativo", nullable = false)
-    @Null(message = "Status do convenio não pode ser nulo")
+    @NotNull(message = "Status do convenio não pode ser nulo")
     @NotBlank(message = "Status do convenio não pode ficar em branco")
     private boolean ativo;
 }

@@ -2,7 +2,7 @@ package br.com.smartmed.consultas.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ public class FormaPagamentoModel {
     private int id;
 
     @Column(name = "descricao", nullable = false, length = 64)
-    @Null(message = "Descrição do pagamento não pode ser nula")
+    @NotNull(message = "Descrição do pagamento não pode ser nula")
     @NotBlank(message = "Descrição do pagamento não pode estar em branco")
     private String descricao;
 
