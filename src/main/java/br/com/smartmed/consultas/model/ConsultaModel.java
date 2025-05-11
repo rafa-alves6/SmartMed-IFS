@@ -35,6 +35,12 @@ public class ConsultaModel {
     @Column(name = "observacoes", nullable = true)
     private String observacoes;
 
+// Foreign keys
+
+    @ManyToOne
+    @JoinColumn(name = "pacienteID", nullable = false)
+    private PacienteModel paciente;
+
 
 
 }

@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -46,5 +47,6 @@ public class PacienteModel {
     @Email(message = "E-mail inválido.")
     private String email;
 
-
+    @OneToMany(mappedBy = "paciente")
+    private List<ConsultaModel> consultas;
 }
