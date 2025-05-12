@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -57,4 +59,7 @@ public class RecepcionistaModel {
     @NotNull(message = "O status do(a) recepcionista não pode ser nulo")
     @NotBlank(message = "O status do(a) recepcionista não pode ficar em branco")
     private boolean ativo;
+
+    @OneToMany(mappedBy = "recepcionista")
+    private Set<ConsultaModel> consultas = new HashSet<>();
 }

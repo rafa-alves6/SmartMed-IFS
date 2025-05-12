@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CNPJ;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,4 +47,7 @@ public class ConvenioModel {
     @NotNull(message = "Status do convenio não pode ser nulo")
     @NotBlank(message = "Status do convenio não pode ficar em branco")
     private boolean ativo;
+
+    @OneToMany(mappedBy = "convenio")
+    private Set<ConsultaModel> consultas = new HashSet<>();
 }

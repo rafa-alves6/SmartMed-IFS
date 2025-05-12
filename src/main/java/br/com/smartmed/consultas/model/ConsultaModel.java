@@ -41,6 +41,19 @@ public class ConsultaModel {
     @JoinColumn(name = "pacienteID", nullable = false)
     private PacienteModel paciente;
 
+    @ManyToOne
+    @JoinColumn(name = "medicoID", nullable = false)
+    private MedicoModel medico;
 
+    @ManyToOne
+    @JoinColumn(name = "formaPagamentoID", nullable = false)
+    private FormaPagamentoModel formaPagamento;
 
+    @ManyToOne
+    @JoinColumn(name = "convenioID", nullable = false)
+    private ConvenioModel convenio;
+
+    @ManyToOne
+    @JoinColumn(name = "recepcionistaID", nullable = false)
+    private RecepcionistaModel recepcionista;
 }

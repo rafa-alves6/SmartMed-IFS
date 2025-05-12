@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,4 +55,7 @@ public class MedicoModel {
     @ManyToOne
     @JoinColumn(name = "especialidadeID", nullable = false)
     private EspecialidadeModel especialidade;
+
+    @OneToMany(mappedBy = "medico")
+    private Set<ConsultaModel> consultas = new HashSet<>();
 }

@@ -12,7 +12,8 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -48,5 +49,5 @@ public class PacienteModel {
     private String email;
 
     @OneToMany(mappedBy = "paciente")
-    private List<ConsultaModel> consultas;
+    private Set<ConsultaModel> consultas = new HashSet<>();
 }
