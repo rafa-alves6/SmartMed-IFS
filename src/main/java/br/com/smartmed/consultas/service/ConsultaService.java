@@ -29,17 +29,17 @@ public class ConsultaService {
 
     // PUT
 
-    public void adicionarConsulta(ConsultaModel consulta) {
+    public void adicionar(ConsultaModel consulta) {
         repo.save(consulta);
     }
 
     // PUT
 
-    public void alterarConsulta(ConsultaModel consulta) {
+    public void alterar(ConsultaModel consulta) {
         repo.save(consulta);
     }
 
-    public void excluirConsulta(Long id) {
+    public void excluir(Long id) {
         repo.deleteById(id);
     }
 }
