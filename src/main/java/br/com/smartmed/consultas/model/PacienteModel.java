@@ -36,6 +36,7 @@ public class PacienteModel {
     private String cpf;
 
     @Column(name = "dataNascimento", nullable = false)
+    @NotNull(message = "É preciso informar a data de nascimento")
     private LocalDate dataNascimento;
 
     @Column(name = "telefone", length = 11, nullable = false)

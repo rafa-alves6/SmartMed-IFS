@@ -45,7 +45,6 @@ public class ConvenioModel {
 
     @Column(name = "ativo", nullable = false)
     @NotNull(message = "Status do convenio não pode ser nulo")
-    @NotBlank(message = "Status do convenio não pode ficar em branco")
     private boolean ativo;
 
     @OneToMany(mappedBy = "convenio")

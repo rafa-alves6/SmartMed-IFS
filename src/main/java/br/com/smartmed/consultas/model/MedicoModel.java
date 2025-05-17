@@ -44,12 +44,10 @@ public class MedicoModel {
 
     @Column(name = "valorConsultaReferencia", nullable = false)
     @NotNull(message = "O valor da consulta do médico não pode ser nulo")
-    @NotBlank(message = "O valor da consulta do médico não pode ficar em branco")
     private float valorConsultaReferencia;
 
     @Column(name = "ativo", nullable = false)
     @NotNull(message = "O status do médico não pode ser nulo")
-    @NotBlank(message = "O status do médico não pode ficar em branco")
     private boolean ativo;
 
     @ManyToOne

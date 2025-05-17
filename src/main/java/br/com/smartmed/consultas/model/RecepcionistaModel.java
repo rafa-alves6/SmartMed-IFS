@@ -39,7 +39,6 @@ public class RecepcionistaModel {
 
     @Column(name = "dataAdmissao", nullable = false)
     @NotNull(message = "A data de admissão não pode ser nula")
-
     private Date dataAdmissao;
 
     @Column(name = "dataDemissao", nullable = false)
@@ -57,7 +56,6 @@ public class RecepcionistaModel {
 
     @Column(name = "ativo", nullable = false)
     @NotNull(message = "O status do(a) recepcionista não pode ser nulo")
-    @NotBlank(message = "O status do(a) recepcionista não pode ficar em branco")
     private boolean ativo;
 
     @OneToMany(mappedBy = "recepcionista")
