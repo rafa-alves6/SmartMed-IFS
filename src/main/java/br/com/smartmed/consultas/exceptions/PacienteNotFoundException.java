@@ -1,7 +1,7 @@
 package br.com.smartmed.consultas.exceptions;
 
-class PacienteNotFoundException extends RuntimeException {
-    PacienteNotFoundException(Long id) {
+public class PacienteNotFoundException extends RuntimeException {
+    public PacienteNotFoundException(Integer id) {
         super("Não foi possível achar paciente com o id " + id);
     }
 }
