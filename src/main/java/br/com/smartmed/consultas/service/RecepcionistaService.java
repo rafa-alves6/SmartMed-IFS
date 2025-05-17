@@ -3,9 +3,10 @@ package br.com.smartmed.consultas.service;
 import br.com.smartmed.consultas.exceptions.RecepcionistaNotFoundException;
 import br.com.smartmed.consultas.model.RecepcionistaModel;
 import br.com.smartmed.consultas.repository.RecepcionistaRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class RecepcionistaService {
     private final RecepcionistaRepository repo;
 

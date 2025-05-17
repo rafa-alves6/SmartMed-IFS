@@ -3,9 +3,10 @@ package br.com.smartmed.consultas.service;
 import br.com.smartmed.consultas.exceptions.PacienteNotFoundException;
 import br.com.smartmed.consultas.model.PacienteModel;
 import br.com.smartmed.consultas.repository.PacienteRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class PacienteService {
     private final PacienteRepository repo;
 
