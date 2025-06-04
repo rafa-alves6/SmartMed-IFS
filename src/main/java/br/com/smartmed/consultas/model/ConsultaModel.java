@@ -1,11 +1,13 @@
 package br.com.smartmed.consultas.model;
 
+import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
 
@@ -56,4 +58,9 @@ public class ConsultaModel {
     @ManyToOne
     @JoinColumn(name = "recepcionistaID", nullable = false)
     private RecepcionistaModel recepcionista;
+
+    public ConsultaDTO toDTO() {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(this, ConsultaDTO.class);
+    }
 }
