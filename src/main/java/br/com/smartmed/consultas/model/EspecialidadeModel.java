@@ -1,11 +1,13 @@
 package br.com.smartmed.consultas.model;
 
+import br.com.smartmed.consultas.rest.dto.EspecialidadeDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,4 +34,9 @@ public class EspecialidadeModel {
 
     @OneToMany(mappedBy = "especialidade")
     private Set<MedicoModel> medicos = new HashSet<>();
+
+    private EspecialidadeDTO toDTO () {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(this, EspecialidadeDTO.class);
+    }
 }

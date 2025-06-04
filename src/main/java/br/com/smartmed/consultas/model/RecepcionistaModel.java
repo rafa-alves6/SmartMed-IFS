@@ -1,5 +1,6 @@
 package br.com.smartmed.consultas.model;
 
+import br.com.smartmed.consultas.rest.dto.RecepcionistaDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
+import org.modelmapper.ModelMapper;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -60,4 +62,9 @@ public class RecepcionistaModel {
 
     @OneToMany(mappedBy = "recepcionista")
     private Set<ConsultaModel> consultas = new HashSet<>();
+
+    private RecepcionistaDTO toDTO(){
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(this, RecepcionistaDTO.class);
+    }
 }

@@ -1,6 +1,7 @@
 package br.com.smartmed.consultas.model;
 
 
+import br.com.smartmed.consultas.rest.dto.PacienteDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -10,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -51,4 +53,9 @@ public class PacienteModel {
 
     @OneToMany(mappedBy = "paciente")
     private Set<ConsultaModel> consultas = new HashSet<>();
+
+    public PacienteDTO toDTO () {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(this, PacienteDTO.class);
+    }
 }
