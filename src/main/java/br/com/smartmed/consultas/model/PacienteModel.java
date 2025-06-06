@@ -14,8 +14,9 @@ import org.hibernate.validator.constraints.br.CPF;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+<<<<<<< HEAD
+=======
+>>>>>>> a999726 (add)
 
 @Data
 @AllArgsConstructor
@@ -26,7 +27,11 @@ public class PacienteModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+<<<<<<< HEAD
     private Integer id;
+=======
+    private int id;
+>>>>>>> a999726 (add)
 
     @Column(name = "nome", length = 255, nullable = false)
     @NotNull(message = "O nome não pode ser nulo.")
@@ -38,7 +43,10 @@ public class PacienteModel {
     private String cpf;
 
     @Column(name = "dataNascimento", nullable = false)
+<<<<<<< HEAD
     @NotNull(message = "É preciso informar a data de nascimento")
+=======
+>>>>>>> a999726 (add)
     private LocalDate dataNascimento;
 
     @Column(name = "telefone", length = 11, nullable = false)
@@ -51,11 +59,18 @@ public class PacienteModel {
     @Email(message = "E-mail inválido.")
     private String email;
 
+<<<<<<< HEAD
     @OneToMany(mappedBy = "paciente")
-    private Set<ConsultaModel> consultas = new HashSet<>();
 
     public PacienteDTO toDTO () {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(this, PacienteDTO.class);
     }
 }
+=======
+    public PacienteDTO toDTO(){
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(this, PacienteDTO.class);
+    }
+}
+>>>>>>> a999726 (add)
