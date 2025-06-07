@@ -57,7 +57,7 @@ public class PacienteService {
      *
      * @param novoPaciente pacienteModel contendo os dados do novo paciente.
      * @return pacienteDTO representando o paciente salvo.
-     * @throws ConstraintException       Se o telefone ou e-mail já existirem.
+     * @throws ConstraintException       Se o telefcone ou e-mail já existirem.
      * @throws DataIntegrityException    Se ocorrer violação de integridade.
      * @throws BusinessRuleException     Se houver violação de regra de negócio.
      * @throws SQLException              Se ocorrer falha de conexão com o banco de dados.
@@ -132,7 +132,12 @@ public class PacienteService {
 
     /**
      * Deleta um paciente da base de dados.
-     *
+     *package br.com.smartmed.consultas.service;
+
+public class PacienteService {
+
+}
+
      * @param pacienteExistente pacienteModel contendo os dados do paciente a ser deletado.
      * @throws ConstraintException       Se o paciente (id) não existir.
      * @throws DataIntegrityException    Se ocorrer violação de integridade.
