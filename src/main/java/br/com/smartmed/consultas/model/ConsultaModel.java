@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -24,7 +24,7 @@ public class ConsultaModel {
 
     @Column(name = "dataHoraConsulta", nullable = false)
     @NotNull(message = "Data e hora da consulta não podem ser nulas")
-    private LocalDate dataHoraConsulta;
+    private LocalDateTime dataHoraConsulta;
 
     @Column(name = "status", nullable = false, length = 16)
     @NotNull(message = "Status da consulta não pode ser nulo")

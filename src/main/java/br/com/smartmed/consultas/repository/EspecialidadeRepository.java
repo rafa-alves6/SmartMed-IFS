@@ -4,6 +4,9 @@ import br.com.smartmed.consultas.model.EspecialidadeModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface EspecialidadeRepository extends JpaRepository<EspecialidadeModel, Integer> {
+    Optional<EspecialidadeModel> findByNome(String nomeEspecialidade);
 }

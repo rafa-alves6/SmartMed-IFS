@@ -56,9 +56,9 @@ public class RecepcionistaModel {
     @NotBlank(message = "O email não pode ficar em branco")
     private String email;
 
-    @Column(name = "ativo", nullable = false)
+    @Column(name = "status", nullable = false)
     @NotNull(message = "O status do(a) recepcionista não pode ser nulo")
-    private boolean ativo;
+    private boolean status;
 
     @OneToMany(mappedBy = "recepcionista")
     private Set<ConsultaModel> consultas = new HashSet<>();

@@ -45,9 +45,9 @@ public class ConvenioModel {
     @NotBlank(message = "O email não pode ficar em branco")
     private String email;
 
-    @Column(name = "ativo", nullable = false)
+    @Column(name = "status", nullable = false)
     @NotNull(message = "Status do convenio não pode ser nulo")
-    private boolean ativo;
+    private boolean status;
 
     @OneToMany(mappedBy = "convenio")
     private Set<ConsultaModel> consultas = new HashSet<>();

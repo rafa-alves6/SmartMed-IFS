@@ -31,6 +31,13 @@ public class MedicoService {
                     .map(medico -> medico.toDTO())
                     .collect(Collectors.toList());
         }
+    @Transactional(readOnly = true)
+    public List<MedicoDTO> obterTodosPorEspecialidade(String especialidadeNome) {
+        List<MedicoModel> medicos = medicoRepository.findAllByEspecialidade_Nome(especialidadeNome);
+        return medicos.stream()
+                .map(medico -> medico.toDTO())
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public MedicoDTO salvar(MedicoModel novoMedico) {
