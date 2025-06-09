@@ -2,32 +2,30 @@ package br.com.smartmed.consultas.service;
 
 import br.com.smartmed.consultas.exception.*;
 import br.com.smartmed.consultas.model.FormaPagamentoModel;
-import br.com.smartmed.consultas.model.PacienteModel;
 import br.com.smartmed.consultas.repository.FormaPagamentoRepository;
 import br.com.smartmed.consultas.rest.dto.FormaPagamentoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class FormaPagamentoService {
     @Autowired
-    FormaPagamentoRepository repository;
-    @Autowired
     private FormaPagamentoRepository formaPagamentoRepository;
 
     @Transactional(readOnly = true)
     public FormaPagamentoDTO buscarPorId(Integer id) {
-        FormaPagamentoModel formaPagamento = repository.findById(id)
+        FormaPagamentoModel formaPagamento = formaPagamentoRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Não foi possível achar uma forma de pagamento com o ID " + id + "."));
         return formaPagamento.toDTO();
     }
 
     @Transactional(readOnly = true)
     public List<FormaPagamentoDTO> buscarTodos() {
-        List<FormaPagamentoModel> formasPagamento = repository.findAll();
+        List<FormaPagamentoModel> formasPagamento = formaPagamentoRepository.findAll();
         return formasPagamento
                 .stream()
                 .map(formaPagamento -> formaPagamento.toDTO())
