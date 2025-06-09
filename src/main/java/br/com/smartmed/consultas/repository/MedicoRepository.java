@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface MedicoRepository extends JpaRepository<MedicoModel, Integer> {
     Optional<MedicoModel> findByCrm(String crm);
-    Optional<MedicoModel> findByNome(String nome);
+    Optional<MedicoModel> findByNomeContainingIgnoreCase(String nome);
     List<MedicoModel> findAllByEspecialidade_Nome(String especialidadeNome); // Lista de médicos com uma certa especialidade (ex: Cardiologia, Oncologia..)
 
     boolean existsByCrm(String crm);

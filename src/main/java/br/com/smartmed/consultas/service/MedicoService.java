@@ -4,7 +4,6 @@ import br.com.smartmed.consultas.exception.*;
 import br.com.smartmed.consultas.model.MedicoModel;
 import br.com.smartmed.consultas.repository.MedicoRepository;
 import br.com.smartmed.consultas.rest.dto.MedicoDTO;
-import br.com.smartmed.consultas.rest.dto.PacienteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +17,21 @@ public class MedicoService {
     private MedicoRepository medicoRepository;
 
     @Transactional(readOnly = true)
-    public MedicoDTO obterPorId(int id) {
+    public MedicoDTO obterPorId(Integer id) {
         MedicoModel medico = medicoRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar médico com ID " + id + "."));
+        return medico.toDTO();
+    }
+    @Transactional(readOnly = true)
+    public MedicoDTO obterPorCrm(String crm) {
+        MedicoModel medico = medicoRepository.findByCrm(crm)
+                .orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar um médico com a CRM " + crm + "."));
+        return medico.toDTO();
+    }
+    @Transactional(readOnly = true)
+    public MedicoDTO obterPorNome(String nome) {
+        MedicoModel medico = medicoRepository.findByNomeContainingIgnoreCase(nome)
+                .orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontar um médico com o nome " + nome + "."));
         return medico.toDTO();
     }
 
