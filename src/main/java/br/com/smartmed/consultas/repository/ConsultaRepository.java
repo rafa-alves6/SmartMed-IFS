@@ -10,22 +10,15 @@ import java.util.Optional;
 
 @Repository
 public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long> {
-
-    List<ConsultaModel> findByPaciente_Cpf(String pacienteCpf);
-
-    List<ConsultaModel> findByMedico_Id(Integer medicoId);
-
+    List<ConsultaModel> findAllByPaciente_Cpf(String pacienteCpf);
+    List<ConsultaModel> findAllByMedico_Id(Integer medicoId);
     Optional<ConsultaModel> findByMedico_IdAndDataHoraConsulta(Integer medicoId, LocalDateTime dataHoraConsulta);
+    List<ConsultaModel> findAllByDataHoraConsulta(LocalDateTime dataHoraConsulta);
+    List<ConsultaModel> findAllByStatusContainingIgnoreCase(String status); // Finalizada, marcada, remarcada...
+    List<ConsultaModel> findAllByConvenio_Nome(String convenioNome);
+    List<ConsultaModel> findAllByConvenio_Id(Integer convenioId);
+    List<ConsultaModel> findAllByRecepcionista_Id(Integer recepcionistaId);
+    List<ConsultaModel> findAllByFormaPagamento_Descricao(String descricao); // Pix, dinheiro, cŕedito etc
 
-    List<ConsultaModel> findByDataHoraConsulta(LocalDateTime dataHoraConsulta);
-
-    List<ConsultaModel> findByStatus(String status); // Finalizada, marcada, remarcada...
-
-    List<ConsultaModel> findByConvenio_Nome(String convenioNome);
-
-    List<ConsultaModel> findByConvenio_Id(Integer convenioId);
-
-    List<ConsultaModel> findByRecepcionista_Id(Integer recepcionistaId);
-
-    List<ConsultaModel> findByFormaPagamento_Descricao(String descricao); // Pix, dinheiro, cŕedito etc
+    boolean existsByMedico_IdAndDataHoraConsulta(Integer medicoId, LocalDateTime dataHoraConsulta);
 }

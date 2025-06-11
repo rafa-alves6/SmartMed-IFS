@@ -1,4 +1,4 @@
-package br.com.smartmed.consultas.repository;
+ package br.com.smartmed.consultas.repository;
 
 import br.com.smartmed.consultas.model.EspecialidadeModel;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface EspecialidadeRepository extends JpaRepository<EspecialidadeModel, Integer> {
-    Optional<EspecialidadeModel> findByNome(String nomeEspecialidade);
+    Optional<EspecialidadeModel> findByNomeContainingIgnoreCase(String nomeEspecialidade);
+    boolean existsByNomeContainingIgnoreCase(String nomeEspecialidade);
 }

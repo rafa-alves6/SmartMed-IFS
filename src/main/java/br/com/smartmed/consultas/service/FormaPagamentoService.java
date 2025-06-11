@@ -86,12 +86,12 @@ public class FormaPagamentoService {
     public void deletar(FormaPagamentoModel formaPagamentoExistente) {
 
         try {
-            //Caso ocorra uma tentativa de deletar um paciente que não existe utilizando o id.
+            //Caso ocorra uma tentativa de deletar uma forma de pagamento que não existe utilizando o id.
             if (!formaPagamentoRepository.existsById(formaPagamentoExistente.getId())) {
                 throw new ConstraintException("Forma de pagamento inexistente na base de dados!");
             }
 
-            //Deletar o paciente na base de dados.
+            //Deletar a forma de pagamento na base de dados.
             formaPagamentoRepository.delete(formaPagamentoExistente);
 
         } catch (DataIntegrityException e) {

@@ -9,10 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface ConvenioRepository extends JpaRepository<ConvenioModel, Integer> {
-    Optional<ConvenioModel> findByNome(String nome);
+    Optional<ConvenioModel> findByNomeContainingIgnoreCase(String nome);
     Optional<ConvenioModel> findByCnpj(String cnpj);
-    List<ConvenioModel> findByStatus(boolean status);
-
+    List<ConvenioModel> findAllByStatus(boolean ativo);
     boolean existsByCnpj(String cnpj);
-    boolean existsByStatus(boolean status);
 }
