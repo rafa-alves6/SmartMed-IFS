@@ -39,7 +39,7 @@ public class EspecialidadeService {
     @Transactional
     public EspecialidadeDTO salvar(EspecialidadeModel novaEspecialidade) {
         try {
-            if(especialidadeRepository.existsByNomeContainingIgnoreCase(novaEspecialidade.getNome())) {
+            if(especialidadeRepository.existsByNomeIgnoreCase(novaEspecialidade.getNome())) {
                 throw new ConstraintException("A especialidade " + novaEspecialidade.getNome() + " já existe no banco de dados.");
             }
             return especialidadeRepository.save(novaEspecialidade).toDTO();
@@ -59,9 +59,10 @@ public class EspecialidadeService {
         }
     }
 
+    @Transactional
     public EspecialidadeDTO atualizar(EspecialidadeModel especialidadeExistente) {
         try {
-            if(!especialidadeRepository.existsByNomeContainingIgnoreCase(especialidadeExistente.getNome())) {
+            if(!especialidadeRepository.existsById(especialidadeExistente.getId())) {
                 throw new ConstraintException("A especialidade "  + especialidadeExistente.getNome() + " não existe no banco de dados." );
             }
             return especialidadeRepository.save(especialidadeExistente).toDTO();

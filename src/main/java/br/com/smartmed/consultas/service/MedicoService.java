@@ -55,6 +55,8 @@ public class MedicoService {
         try {
             if(medicoRepository.existsByCrm(novoMedico.getCrm())) {
                 throw new ConstraintException("Já existe um médico cadastrado com o CRM" + novoMedico.getCrm());
+            } else if(medicoRepository.existsByEmail(novoMedico.getEmail())) {
+                throw new ConstraintException("Já existe um médico cadastrado com o e-mail " + novoMedico.getEmail() + ".");
             }
             return medicoRepository.save(novoMedico).toDTO();
         }
