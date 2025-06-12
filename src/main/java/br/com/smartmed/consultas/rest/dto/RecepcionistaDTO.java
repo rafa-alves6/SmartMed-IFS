@@ -1,7 +1,10 @@
 package br.com.smartmed.consultas.rest.dto;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class RecepcionistaDTO {
     private Integer id;
     private String nome;
