@@ -14,4 +14,5 @@ public interface MedicoRepository extends JpaRepository<MedicoModel, Integer> {
     List<MedicoModel> findAllByEspecialidade_Nome(String especialidadeNome); // Lista de médicos com uma certa especialidade (ex: Cardiologia, Oncologia..)
 
     boolean existsByCrm(String crm);
+    boolean existsByEmail(String email);
 }

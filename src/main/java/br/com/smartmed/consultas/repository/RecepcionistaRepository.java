@@ -14,4 +14,5 @@ public interface RecepcionistaRepository extends JpaRepository<RecepcionistaMode
     List<RecepcionistaModel> findAllByStatus(boolean status); // Lista de recepcionistas dependendo do status (true = ativo)
 
     boolean existsByCpf(String cpf);
+    boolean existsByEmail(String email);
 }

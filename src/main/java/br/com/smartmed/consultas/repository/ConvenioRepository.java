@@ -13,4 +13,5 @@ public interface ConvenioRepository extends JpaRepository<ConvenioModel, Integer
     Optional<ConvenioModel> findByCnpj(String cnpj);
     List<ConvenioModel> findAllByStatus(boolean ativo);
     boolean existsByCnpj(String cnpj);
+    boolean existsByEmail(String email);
 }

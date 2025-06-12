@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface EspecialidadeRepository extends JpaRepository<EspecialidadeModel, Integer> {
     Optional<EspecialidadeModel> findByNomeContainingIgnoreCase(String nomeEspecialidade);
-    boolean existsByNomeContainingIgnoreCase(String nomeEspecialidade);
+    boolean existsByNomeIgnoreCase(String nomeEspecialidade); // para POST (PRECISA escrever o nome completo)
 }
