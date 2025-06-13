@@ -29,10 +29,12 @@ public class MedicoService {
         return medico.toDTO();
     }
     @Transactional(readOnly = true)
-    public MedicoDTO obterPorNome(String nome) {
-        MedicoModel medico = medicoRepository.findByNomeContainingIgnoreCase(nome)
-                .orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontar um médico com o nome " + nome + "."));
-        return medico.toDTO();
+    public List<MedicoDTO> obterPorNome(String nome) {
+        List<MedicoModel> medicos = medicoRepository.findAllByNomeContainingIgnoreCase(nome);
+        return medicos
+                .stream()
+                .map(medico -> medico.toDTO())
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
