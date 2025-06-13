@@ -87,7 +87,7 @@ public class EspecialidadeService {
         try {
             //Caso ocorra uma tentativa de deletar uma especialidade que não existe utilizando o id.
             if (!especialidadeRepository.existsById(especialidadeExistente.getId())) {
-                throw new ConstraintException("Forma de pagamento inexistente na base de dados!");
+                throw new ConstraintException("Especialidade inexistente na base de dados!");
             }
 
             //Deletar a especialidade na base de dados.
