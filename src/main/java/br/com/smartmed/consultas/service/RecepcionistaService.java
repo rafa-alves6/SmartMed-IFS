@@ -30,7 +30,7 @@ public class RecepcionistaService {
     }
     @Transactional(readOnly = true)
     public List<RecepcionistaDTO> obterTodosPorNome(String nome) {
-        List<RecepcionistaModel> recepcionistas = recepcionistaRepository.findAllByNomeContainingIgnoreCase(nome)
+        List<RecepcionistaModel> recepcionistas = recepcionistaRepository.findAllByNomeContainingIgnoreCase(nome);
         return recepcionistas
                 .stream().map(recepcionista -> recepcionista.toDTO())
                 .collect(Collectors.toList());
