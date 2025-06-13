@@ -29,10 +29,11 @@ public class RecepcionistaService {
         return recepcionista.toDTO();
     }
     @Transactional(readOnly = true)
-    public RecepcionistaDTO obterPorNome(String nome) {
-        RecepcionistaModel recepcionista = recepcionistaRepository.findByNomeContainingIgnoreCase(nome)
-                .orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontar um recepcionista com o nome " + nome + "."));
-        return recepcionista.toDTO();
+    public List<RecepcionistaDTO> obterTodosPorNome(String nome) {
+        List<RecepcionistaModel> recepcionistas = recepcionistaRepository.findAllByNomeContainingIgnoreCase(nome)
+        return recepcionistas
+                .stream().map(recepcionista -> recepcionista.toDTO())
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

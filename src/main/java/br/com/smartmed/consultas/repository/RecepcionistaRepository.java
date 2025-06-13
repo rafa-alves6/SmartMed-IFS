@@ -10,9 +10,8 @@ import java.util.List;
 @Repository
 public interface RecepcionistaRepository extends JpaRepository<RecepcionistaModel, Integer> {
     Optional<RecepcionistaModel> findByCpf(String cpf);
-    Optional<RecepcionistaModel> findByNomeContainingIgnoreCase(String nome);
+    List<RecepcionistaModel> findAllByNomeContainingIgnoreCase(String nome);
     List<RecepcionistaModel> findAllByStatus(boolean status); // Lista de recepcionistas dependendo do status (true = ativo)
 
     boolean existsByCpf(String cpf);
-    boolean existsByEmail(String email);
 }
