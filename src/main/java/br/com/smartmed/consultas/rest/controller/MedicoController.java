@@ -22,7 +22,7 @@ public class MedicoController {
     }
 
     @GetMapping("/especialidade/{especialidade}")
-    public ResponseEntity<List<MedicoDTO>> buscarTodosPorEspecialidade(@PathVariable String especialidade) {
+    public ResponseEntity<List<MedicoDTO>> buscarTodosPorEspecialidade(@PathVariable String especialidade) { //
         List<MedicoDTO> medicos = medicoService.obterTodosPorEspecialidade(especialidade);
         return ResponseEntity.status(HttpStatus.OK).body(medicos);
     }
@@ -39,10 +39,10 @@ public class MedicoController {
         return ResponseEntity.status(HttpStatus.OK).body(medico);
     }
 
-    @GetMapping("/nome/{nome}") // Busca em uma String contendo o nome. (Ex: String 'Jo' retorna Joao, Jose, John...)
-    public ResponseEntity<MedicoDTO> buscarPorNome(@PathVariable String nome) {
-        MedicoDTO medico = medicoService.obterPorNome(nome);
-        return ResponseEntity.status(HttpStatus.OK).body(medico);
+    @GetMapping("/nome/{nome}") // Retorna uma lista de médicos baseado na String. (Ex: String "Jo" retorna MedicoModel's com nome "João", "José", "John"...)
+    public ResponseEntity<List<MedicoDTO>> buscarPorNomeContendo(@PathVariable String nome) {
+        List<MedicoDTO> medicos = medicoService.obterPorNome(nome);
+        return ResponseEntity.status(HttpStatus.OK).body(medicos);
     }
 
     @PostMapping()
