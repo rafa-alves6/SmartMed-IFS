@@ -51,3 +51,4 @@ public class EspecialidadeController {
         especialidadeService.deletar(especialidadeExistente);
         return ResponseEntity.noContent().build();
     }
+}
