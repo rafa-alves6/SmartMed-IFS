@@ -4,6 +4,7 @@ import java.util.List;
 import br.com.smartmed.consultas.model.ConvenioModel;
 import br.com.smartmed.consultas.rest.dto.ConvenioDTO;
 import br.com.smartmed.consultas.service.ConvenioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,19 +35,19 @@ public class ConvenioController {
     }
 
     @PostMapping()
-    public ResponseEntity<ConvenioDTO> salvar(ConvenioModel novoConvenio) {
+    public ResponseEntity<ConvenioDTO> salvar(@Valid @RequestBody ConvenioModel novoConvenio) {
         ConvenioDTO novoConvenioDTO =  convenioService.salvar(novoConvenio);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoConvenioDTO);
     }
 
     @PutMapping
-    public ResponseEntity<ConvenioDTO> atualizar(ConvenioModel convenioExistente) {
+    public ResponseEntity<ConvenioDTO> atualizar(@Valid @RequestBody ConvenioModel convenioExistente) {
         ConvenioDTO convenioExistenteDTO = convenioService.atualizar(convenioExistente);
         return ResponseEntity.status(HttpStatus.OK).body(convenioExistenteDTO);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deletar(ConvenioModel convenioExistente) {
+    public ResponseEntity<Void> deletar(@Valid @RequestBody ConvenioModel convenioExistente) {
         convenioService.deletar(convenioExistente);
         return ResponseEntity.noContent().build();
     }
