@@ -43,7 +43,8 @@ public class RecepcionistaModel {
     @NotNull(message = "A data de admissão não pode ser nula")
     private Date dataAdmissao;
 
-    @Column(name = "dataDemissao", nullable = false)
+    @Column(name = "dataDemissao", nullable = trueus
+    )
     private Date dataDemissao;
 
     @Column(name = "telefone", nullable = false, length = 11)
