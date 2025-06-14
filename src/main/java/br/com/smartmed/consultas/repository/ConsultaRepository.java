@@ -11,14 +11,15 @@ import java.util.Optional;
 @Repository
 public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long> {
     List<ConsultaModel> findAllByPaciente_Cpf(String pacienteCpf);
-    List<ConsultaModel> findAllByMedico_Id(Integer medicoId);
+    List<ConsultaModel> findAllByMedico_NomeContainingIgnoreCase(String medicoNome);
     Optional<ConsultaModel> findByMedico_IdAndDataHoraConsulta(Integer medicoId, LocalDateTime dataHoraConsulta);
     List<ConsultaModel> findAllByDataHoraConsulta(LocalDateTime dataHoraConsulta);
     List<ConsultaModel> findAllByStatusContainingIgnoreCase(String status); // Finalizada, marcada, remarcada...
-    List<ConsultaModel> findAllByConvenio_Nome(String convenioNome);
-    List<ConsultaModel> findAllByConvenio_Id(Integer convenioId);
+    List<ConsultaModel> findAllByConvenio_NomeContainingIgnoreCase(String convenioNome);
+    List<ConsultaModel> findAllByConvenio_Cnpj(String convenioCnpj);
     List<ConsultaModel> findAllByRecepcionista_Id(Integer recepcionistaId);
-    List<ConsultaModel> findAllByFormaPagamento_Descricao(String descricao); // Pix, dinheiro, cŕedito etc
+
+    List<ConsultaModel> findAllByFormaPagamento_DescricaoContainingIgnoreCase(String formaPagamentoDescricao);
 
     boolean existsByMedico_IdAndDataHoraConsulta(Integer medicoId, LocalDateTime dataHoraConsulta);
 }

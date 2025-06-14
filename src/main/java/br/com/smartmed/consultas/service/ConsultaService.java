@@ -24,13 +24,13 @@ public class ConsultaService {
         return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
     }
     @Transactional(readOnly = true)
-    public List<ConsultaDTO> buscarTodasPorConvenio(String nomeConvenio) {
-        List<ConsultaModel> consultas = consultaRepository.findAllByConvenio_Nome(nomeConvenio);
+    public List<ConsultaDTO> buscarTodasPorConvenioNome(String nomeConvenio) {
+        List<ConsultaModel> consultas = consultaRepository.findAllByConvenio_NomeContainingIgnoreCase(nomeConvenio);
         return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
     }
     @Transactional(readOnly = true)
-    public List<ConsultaDTO> buscarTodasPorConvenioId(Integer convenioId) {
-        List<ConsultaModel> consultas = consultaRepository.findAllByConvenio_Id(convenioId);
+    public List<ConsultaDTO> buscarTodasPorConvenioCNPJ(String convenioCnpj) {
+        List<ConsultaModel> consultas = consultaRepository.findAllByConvenio_Cnpj(convenioCnpj);
         return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
     }
     @Transactional(readOnly = true)
@@ -40,7 +40,7 @@ public class ConsultaService {
     }
     @Transactional(readOnly = true)
     public List<ConsultaDTO> buscarTodasPorFormaDePagamento(String formaPagamento) {
-        List<ConsultaModel> consultas = consultaRepository.findAllByFormaPagamento_Descricao(formaPagamento);
+        List<ConsultaModel> consultas = consultaRepository.findAllByFormaPagamento_DescricaoContainingIgnoreCase(formaPagamento);
         return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
     }
     @Transactional(readOnly = true)
@@ -50,8 +50,8 @@ public class ConsultaService {
     }
 
     @Transactional(readOnly = true)
-    public List<ConsultaDTO> buscarTodasPorIdDoMedico(Integer medicoId) {
-        List<ConsultaModel> consultas = consultaRepository.findAllByMedico_Id(medicoId);
+    public List<ConsultaDTO> buscarTodasPorNomeDoMedico(String medicoNome) {
+        List<ConsultaModel> consultas = consultaRepository.findAllByMedico_NomeContainingIgnoreCase(medicoNome);
         return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
     }
 
