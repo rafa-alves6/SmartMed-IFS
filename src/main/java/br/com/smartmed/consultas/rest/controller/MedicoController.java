@@ -1,5 +1,4 @@
 package br.com.smartmed.consultas.rest.controller;
-import java.util.List;
 
 import br.com.smartmed.consultas.model.MedicoModel;
 import br.com.smartmed.consultas.rest.dto.MedicoDTO;
@@ -9,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/medico")
@@ -48,7 +49,7 @@ public class MedicoController {
     @PostMapping()
     public ResponseEntity<MedicoDTO> salvar(@Valid @RequestBody MedicoModel novoMedico) {
         MedicoDTO novoMedicoDTO = medicoService.salvar(novoMedico);
-        return ResponseEntity.status(HttpStatus.OK).body(novoMedicoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoMedicoDTO);
     }
 
     @PutMapping()

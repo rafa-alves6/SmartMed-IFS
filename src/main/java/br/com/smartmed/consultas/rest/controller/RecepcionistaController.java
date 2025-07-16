@@ -1,7 +1,5 @@
 package br.com.smartmed.consultas.rest.controller;
-import java.util.List;
 
-import br.com.smartmed.consultas.model.ConvenioModel;
 import br.com.smartmed.consultas.model.RecepcionistaModel;
 import br.com.smartmed.consultas.rest.dto.RecepcionistaDTO;
 import br.com.smartmed.consultas.service.RecepcionistaService;
@@ -10,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/recepcionista")
