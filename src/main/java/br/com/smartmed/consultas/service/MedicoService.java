@@ -46,7 +46,7 @@ public class MedicoService {
         }
     @Transactional(readOnly = true)
     public List<MedicoDTO> obterTodosPorEspecialidade(String especialidade) {
-            List<MedicoModel> medicos = medicoRepository.findAllByEspecialidade_NomeIgnoreCase(especialidade);
+            List<MedicoModel> medicos = medicoRepository.findAllByEspecialidadeIgnoreCase(especialidade);
             return medicos.stream()
                     .map(medico -> medico.toDTO())
                     .collect(Collectors.toList());
