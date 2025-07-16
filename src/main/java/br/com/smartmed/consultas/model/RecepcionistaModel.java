@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
 import org.modelmapper.ModelMapper;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,15 +37,14 @@ public class RecepcionistaModel {
 
     @Column(name = "dataNascimento", nullable = false)
     @NotNull(message = "A data de nascimento não pode ser nula")
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 
     @Column(name = "dataAdmissao", nullable = false)
     @NotNull(message = "A data de admissão não pode ser nula")
-    private Date dataAdmissao;
+    private LocalDate dataAdmissao;
 
-    @Column(name = "dataDemissao", nullable = trueus
-    )
-    private Date dataDemissao;
+    @Column(name = "dataDemissao", nullable = true)
+    private LocalDate dataDemissao;
 
     @Column(name = "telefone", nullable = false, length = 11)
     @NotNull(message = "O número de telefone não pode ser nulo")
@@ -60,11 +59,7 @@ public class RecepcionistaModel {
     @Column(name = "status", nullable = false)
     @NotNull(message = "O status do(a) recepcionista não pode ser nulo")
     private boolean status;
-
-    @OneToMany(mappedBy = "recepcionista")
-    private Set<ConsultaModel> consultas = new HashSet<>();
-
-    public RecepcionistaDTO toDTO(){
+    public RecepcionistaDTO toDTO() {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(this, RecepcionistaDTO.class);
     }

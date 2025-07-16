@@ -27,9 +27,6 @@ public class FormaPagamentoModel {
     @NotBlank(message = "Descrição do pagamento não pode estar em branco")
     private String descricao;
 
-    @OneToMany(mappedBy = "formaPagamento")
-    private Set<ConsultaModel> consultas = new HashSet<>();
-
     public FormaPagamentoDTO toDTO () {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(this, FormaPagamentoDTO.class);

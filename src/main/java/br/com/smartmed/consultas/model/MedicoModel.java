@@ -52,13 +52,6 @@ public class MedicoModel {
     @NotNull(message = "O status do médico não pode ser nulo")
     private boolean ativo;
 
-    @ManyToOne
-    @JoinColumn(name = "especialidadeID", nullable = false)
-    private EspecialidadeModel especialidade;
-
-    @OneToMany(mappedBy = "medico")
-    private Set<ConsultaModel> consultas = new HashSet<>();
-
     public MedicoDTO toDTO () {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(this, MedicoDTO.class);

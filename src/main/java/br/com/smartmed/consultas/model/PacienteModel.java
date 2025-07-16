@@ -51,9 +51,6 @@ public class PacienteModel {
     @Email(message = "E-mail inválido.")
     private String email;
 
-    @OneToMany(mappedBy = "paciente")
-    private Set<ConsultaModel> consultas = new HashSet<>();
-
     public PacienteDTO toDTO() {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(this, PacienteDTO.class);
