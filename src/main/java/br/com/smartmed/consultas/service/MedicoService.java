@@ -1,6 +1,7 @@
 package br.com.smartmed.consultas.service;
 
 import br.com.smartmed.consultas.exception.*;
+import br.com.smartmed.consultas.model.EspecialidadeModel;
 import br.com.smartmed.consultas.model.MedicoModel;
 import br.com.smartmed.consultas.repository.MedicoRepository;
 import br.com.smartmed.consultas.rest.dto.MedicoDTO;
@@ -45,8 +46,8 @@ public class MedicoService {
                     .collect(Collectors.toList());
         }
     @Transactional(readOnly = true)
-    public List<MedicoDTO> obterTodosPorEspecialidade(String especialidade) {
-            List<MedicoModel> medicos = medicoRepository.findAllByEspecialidadeIgnoreCase(especialidade);
+    public List<MedicoDTO> obterTodosPorEspecialidade(EspecialidadeModel especialidade) {
+            List<MedicoModel> medicos = medicoRepository.findAllByEspecialidade(especialidade);
             return medicos.stream()
                     .map(medico -> medico.toDTO())
                     .collect(Collectors.toList());
