@@ -37,6 +37,26 @@ public class ConsultaModel {
     @Column(name = "observacoes", nullable = true)
     private String observacoes;
 
+    @ManyToOne
+    @JoinColumn(name = "pacienteID", nullable = false)
+    private PacienteModel paciente;
+
+    @ManyToOne
+    @JoinColumn(name = "medicoID", nullable = false)
+    private MedicoModel medico;
+
+    @ManyToOne
+    @JoinColumn(name = "formaPagamentoID", nullable = false)
+    private FormaPagamentoModel formaPagamento;
+
+    @ManyToOne
+    @JoinColumn(name = "convenioID", nullable = false)
+    private ConvenioModel convenio;
+
+    @ManyToOne
+    @JoinColumn(name = "recepcionistaID", nullable = false)
+
+    private RecepcionistaModel recepcionista;
     public ConsultaDTO toDTO() {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(this, ConsultaDTO.class);

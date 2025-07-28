@@ -49,6 +49,9 @@ public class ConvenioModel {
     @NotNull(message = "Status do convenio não pode ser nulo")
     private boolean status;
 
+    @OneToMany(mappedBy = "convenio")
+    private Set<ConsultaModel> consultas = new HashSet<>();
+
     public ConvenioDTO toDTO () {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(this, ConvenioDTO.class);

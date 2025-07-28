@@ -59,6 +59,10 @@ public class RecepcionistaModel {
     @Column(name = "status", nullable = false)
     @NotNull(message = "O status do(a) recepcionista não pode ser nulo")
     private boolean status;
+
+    @OneToMany(mappedBy = "recepcionista")
+    private Set<ConsultaModel> consultas = new HashSet<>();
+
     public RecepcionistaDTO toDTO() {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(this, RecepcionistaDTO.class);

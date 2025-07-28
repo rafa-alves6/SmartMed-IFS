@@ -32,6 +32,9 @@ public class EspecialidadeModel {
     @NotBlank(message = "Descrição da especialidade não pode estar em branco")
     private String descricao;
 
+    @OneToMany(mappedBy = "especialidade")
+    private Set<MedicoModel> medicos = new HashSet<>();
+
     public EspecialidadeDTO toDTO() {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(this, EspecialidadeDTO.class);
