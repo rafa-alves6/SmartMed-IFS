@@ -1,25 +1,61 @@
 package br.com.smartmed.consultas.repository;
 
 import br.com.smartmed.consultas.model.ConsultaModel;
+import br.com.smartmed.consultas.rest.dto.FaturamentoPorConvenioDTO;
+import br.com.smartmed.consultas.rest.dto.FaturamentoPorFormaPagamentoDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long> {
+
     List<ConsultaModel> findAllByPaciente_Cpf(String pacienteCpf);
     List<ConsultaModel> findAllByMedico_NomeContainingIgnoreCase(String medicoNome);
     Optional<ConsultaModel> findByMedico_IdAndDataHoraConsulta(Integer medicoId, LocalDateTime dataHoraConsulta);
     List<ConsultaModel> findAllByDataHoraConsulta(LocalDateTime dataHoraConsulta);
-    List<ConsultaModel> findAllByStatusContainingIgnoreCase(String status); // Finalizada, marcada, remarcada...
+    List<ConsultaModel> findAllByStatusContainingIgnoreCase(String status);
     List<ConsultaModel> findAllByConvenio_NomeContainingIgnoreCase(String convenioNome);
     List<ConsultaModel> findAllByConvenio_Cnpj(String convenioCnpj);
     List<ConsultaModel> findAllByRecepcionista_Id(Integer recepcionistaId);
-
     List<ConsultaModel> findAllByFormaPagamento_DescricaoContainingIgnoreCase(String formaPagamentoDescricao);
-
     boolean existsByMedico_IdAndDataHoraConsulta(Integer medicoId, LocalDateTime dataHoraConsulta);
+
+   // Relat´rio
+
+
+    @Query("SELECT COALESCE(SUM(csta.valor), 0.0) FROM ConsultaModel csta " +
+            "WHERE csta.status = 'REALIZADA' " +
+            "AND DATE(csta.dataHoraConsulta) BETWEEN :dataInicio AND :dataFim")
+    double calcularTotalGeralPorPeriodo(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
+
+
+    @Query("SELECT new br.com.smartmed.consultas.rest.dto.FaturamentoPorFormaPagamentoDTO(" +
+            "pagamento.descricao, COALESCE(SUM(csta.valor), 0.0)) " +
+            "FROM ConsultaModel csta " +
+            "JOIN csta.formaPagamento pagamento " +
+            "WHERE csta.status = 'REALIZADA' " +
+            "AND DATE(csta.dataHoraConsulta) BETWEEN :dataInicio AND :dataFim " +
+            "GROUP BY pagamento.descricao " +
+            "ORDER BY pagamento.descricao")
+    List<FaturamentoPorFormaPagamentoDTO> buscarFaturamentoPorFormaPagamento(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
+
+
+    @Query("SELECT new br.com.smartmed.consultas.rest.dto.FaturamentoPorConvenioDTO(" +
+            "cnv.nome, COALESCE(SUM(csta.valor), 0.0)) " +
+            "FROM ConsultaModel csta " +
+            "JOIN csta.convenio cnv " +
+            "WHERE csta.status = 'REALIZADA' " +
+            "AND csta.convenio IS NOT NULL " +
+            "AND DATE(csta.dataHoraConsulta) BETWEEN :dataInicio AND :dataFim " +
+            "GROUP BY cnv.nome " +
+            "ORDER BY cnv.nome")
+    List<FaturamentoPorConvenioDTO> buscarFaturamentoPorConvenio(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
+
 }
