@@ -7,6 +7,7 @@ import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.FaturamentoPorConvenioDTO;
 import br.com.smartmed.consultas.rest.dto.FaturamentoPorFormaPagamentoDTO;
 import br.com.smartmed.consultas.rest.dto.RelatorioOutDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,77 +24,85 @@ public class ConsultaService {
     @Autowired
     private ConsultaRepository consultaRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Transactional(readOnly = true)
     public List<ConsultaDTO> buscarTodasPorHorario(LocalDateTime horario) {
-        try {
-            if (horario == null) {
-                throw new BusinessRuleException("Informe o horário que deseja buscar.");
-            }
-
-            List<ConsultaModel> consultas = consultaRepository.findAllByDataHoraConsulta(horario);
-        return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
-        } catch (BusinessRuleException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new BusinessRuleException("Não foi possivel buscar por horário: " + e.getMessage());
+        if (horario == null) {
+            throw new BusinessRuleException("Informe o horário que deseja buscar.");
         }
+        List<ConsultaModel> consultas = consultaRepository.findAllByDataHoraConsulta(horario);
+        return consultas.stream()
+                .map(consulta -> modelMapper.map(consulta, ConsultaDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<ConsultaDTO> buscarTodasPorConvenioNome(String nomeConvenio) {
         List<ConsultaModel> consultas = consultaRepository.findAllByConvenio_NomeContainingIgnoreCase(nomeConvenio);
-        return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
+        return consultas.stream()
+                .map(consulta -> modelMapper.map(consulta, ConsultaDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<ConsultaDTO> buscarTodasPorConvenioCNPJ(String convenioCnpj) {
         List<ConsultaModel> consultas = consultaRepository.findAllByConvenio_Cnpj(convenioCnpj);
-        return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
+        return consultas.stream()
+                .map(consulta -> modelMapper.map(consulta, ConsultaDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<ConsultaDTO> buscarTodasPorRecepcionistaId(Integer recepcionistaId) {
         List<ConsultaModel> consultas = consultaRepository.findAllByRecepcionista_Id(recepcionistaId);
-        return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
+        return consultas.stream()
+                .map(consulta -> modelMapper.map(consulta, ConsultaDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<ConsultaDTO> buscarTodasPorFormaDePagamento(String formaPagamento) {
         List<ConsultaModel> consultas = consultaRepository.findAllByFormaPagamento_DescricaoContainingIgnoreCase(formaPagamento);
-        return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
+        return consultas.stream()
+                .map(consulta -> modelMapper.map(consulta, ConsultaDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<ConsultaDTO> buscarTodasPorCpfDoPaciente(String pacienteCpf) {
         List<ConsultaModel> consultas = consultaRepository.findAllByPaciente_Cpf(pacienteCpf);
-        return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
+        return consultas.stream()
+                .map(consulta -> modelMapper.map(consulta, ConsultaDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<ConsultaDTO> buscarTodasPorNomeDoMedico(String medicoNome) {
         List<ConsultaModel> consultas = consultaRepository.findAllByMedico_NomeContainingIgnoreCase(medicoNome);
-        return consultas.stream().map(ConsultaModel::toDTO).collect(Collectors.toList());
+        return consultas.stream()
+                .map(consulta -> modelMapper.map(consulta, ConsultaDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public Optional<ConsultaDTO> buscarPorIdDoMedicoEHorarioDaConsulta(Integer medicoId, LocalDateTime horarioConsulta) {
         return consultaRepository.findByMedico_IdAndDataHoraConsulta(medicoId, horarioConsulta)
-                .map(ConsultaModel::toDTO);
+                .map(consulta -> modelMapper.map(consulta, ConsultaDTO.class));
     }
 
     @Transactional(readOnly = true)
     public ConsultaDTO buscarPorId(Long id) {
-        ConsultaModel consulta = consultaRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Não foi possível achar um consulta com o ID " + id + "."));
-        return consulta.toDTO();
+        ConsultaModel consulta = consultaRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Não foi possível achar um consulta com o ID " + id + "."));
+        return modelMapper.map(consulta, ConsultaDTO.class);
     }
 
     @Transactional(readOnly = true)
     public List<ConsultaDTO> buscarTodos() {
         List<ConsultaModel> consultas = consultaRepository.findAll();
-        return consultas
-                .stream()
-                .map(ConsultaModel::toDTO)
+        return consultas.stream()
+                .map(consulta -> modelMapper.map(consulta, ConsultaDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -101,48 +110,51 @@ public class ConsultaService {
     public List<ConsultaDTO> buscarTodosPorStatus(String status) {
         List<ConsultaModel> consultas = consultaRepository.findAllByStatusContainingIgnoreCase(status);
         return consultas.stream()
-                .map(ConsultaModel::toDTO)
+                .map(consulta -> modelMapper.map(consulta, ConsultaDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public ConsultaDTO salvar(ConsultaModel novaConsulta) {
         try {
-            return consultaRepository.save(novaConsulta).toDTO();
-        }
-        catch(DataIntegrityException e) {
-            throw new DataIntegrityException("Não foi possível salvar a consulta com ID " + novaConsulta.getId());
-        } catch(ConstraintException e) {
-            if(e.getMessage() == null || e.getMessage().isBlank()) {
-                throw new ConstraintException("Erro de restrição de integridade ao salvar a consulta com ID " + novaConsulta.getId());
+            ConsultaModel consultaSalva = consultaRepository.save(novaConsulta);
+            ConsultaModel consultaCompleta = consultaRepository.findById(consultaSalva.getId())
+                    .orElseThrow(() -> new ObjectNotFoundException("Erro ao buscar consulta salva com ID " + consultaSalva.getId()));
+            return modelMapper.map(consultaCompleta, ConsultaDTO.class);
+        } catch (DataIntegrityException e) {
+            throw new DataIntegrityException("Erro! Não foi possível salvar a consulta!");
+        } catch (ConstraintException e) {
+            if (e.getMessage() == null || e.getMessage().isBlank()) {
+                throw new ConstraintException("Erro de restrição de integridade ao salvar a consulta.");
             }
             throw e;
         } catch (BusinessRuleException e) {
-            throw new BusinessRuleException("Não foi possível salvar a consulta com ID " + novaConsulta.getId() + "- Violação de regra de negócio");
+            throw new BusinessRuleException("Erro! Não foi possível salvar a consulta. Violação de regra de negócio!");
         } catch (SQLException e) {
-            throw new SQLException("Não foi possível salvar a consulta com ID " + novaConsulta.getId() + ": Ocorreu um erro no banco de dados.");
+            throw new SQLException("Erro! Não foi possível salvar a consulta. Falha na conexão com o banco de dados!");
         }
     }
 
+    @Transactional
     public ConsultaDTO atualizar(ConsultaModel consultaExistente) {
         try {
-            if(!consultaRepository.existsById(consultaExistente.getId())) {
-                throw new ConstraintException("A consulta com ID " + consultaExistente.getId() + " não existe no banco de dados." );
+            if (!consultaRepository.existsById(consultaExistente.getId())) {
+                throw new ObjectNotFoundException("A consulta com ID " + consultaExistente.getId() + " não existe no banco de dados.");
             }
-            return consultaRepository.save(consultaExistente).toDTO();
+            return modelMapper.map(consultaRepository.save(consultaExistente), ConsultaDTO.class);
         } catch (DataIntegrityException e) {
-            throw new DataIntegrityException("Não foi possível atualizar a consulta com ID " + consultaExistente.getId());
-        } catch(ConstraintException e) {
-            if(e.getMessage() == null || e.getMessage().isBlank()) {
-                throw new ConstraintException("Erro ao atualizar a consulta com Id " + consultaExistente.getId() + ": Restrição de integridade de dados.");
+            throw new DataIntegrityException("Erro! Não foi possível atualizar a consulta!");
+        } catch (ConstraintException e) {
+            if (e.getMessage() == null || e.getMessage().isBlank()) {
+                throw new ConstraintException("Erro ao atualizar a consulta: Restrição de integridade de dados.");
             }
             throw e;
         } catch (BusinessRuleException e) {
-            throw new BusinessRuleException("Não foi possível atualizar a consulta com id " + consultaExistente.getId() + ": Violação de regra de negócio.");
+            throw new BusinessRuleException("Erro! Não foi possível atualizar a consulta. Violação de regra de negócio!");
         } catch (SQLException e) {
-            throw new SQLException("Não foi possível atualizar a consulta com id " + consultaExistente.getId() + ": Falha na conexão com o banco de dados");
+            throw new SQLException("Erro! Não foi possível atualizar a consulta. Falha na conexão com o banco de dados!");
         } catch (ObjectNotFoundException e) {
-            throw new ObjectNotFoundException("Não foi possível atualizar a consulta com ID " + consultaExistente.getId() + "Não encontrado no banco de dados.");
+            throw new ObjectNotFoundException("Erro! Não foi possível atualizar a consulta. Não encontrada no banco de dados!");
         }
     }
 
@@ -154,48 +166,32 @@ public class ConsultaService {
             }
             consultaRepository.delete(consultaExistente);
         } catch (DataIntegrityException e) {
-            throw new DataIntegrityException("Erro! Não foi possível deletar a consulta com ID " + consultaExistente.getId() + " !");
+            throw new DataIntegrityException("Erro! Não foi possível deletar a consulta!");
         } catch (ConstraintException e) {
             if (e.getMessage() == null || e.getMessage().isBlank()) {
-                throw new ConstraintException("Erro ao deletar a consulta com ID " + consultaExistente.getId() + ": Restrição de integridade de dados.");
+                throw new ConstraintException("Erro ao deletar a consulta: Restrição de integridade de dados.");
             }
             throw e;
         } catch (BusinessRuleException e) {
-            throw new BusinessRuleException("Erro! Não foi possível deletar a consulta com ID " + consultaExistente.getId() + ". Violação de regra de negócio!");
+            throw new BusinessRuleException("Erro! Não foi possível deletar a consulta. Violação de regra de negócio!");
         } catch (SQLException e) {
-            throw new SQLException("Erro! Não foi possível deletar a consulta com ID " + consultaExistente.getId() + ". Falha na conexão com o banco de dados!");
+            throw new SQLException("Erro! Não foi possível deletar a consulta. Falha na conexão com o banco de dados!");
         } catch (ObjectNotFoundException e) {
-            throw new ObjectNotFoundException("Erro! Não foi possível deletar a consulta com ID " + consultaExistente.getId() + ". Não encontrado no banco de dados!");
+            throw new ObjectNotFoundException("Erro! Não foi possível deletar a consulta. Não encontrada no banco de dados!");
         }
     }
 
     @Transactional(readOnly = true)
     public RelatorioOutDTO gerarRelatorioFaturamento(LocalDate dataInicio, LocalDate dataFim) {
-        try {
-            if (dataInicio == null || dataFim == null) {
-                throw new BusinessRuleException("Data inicio e data fim são obrigatórias");
-            }
-
-            if (dataInicio.isAfter(dataFim)) {
-                throw new BusinessRuleException("Data de inicio não pode ser posterior a data fim");
-            }
-
-            double totalGeral = consultaRepository.calcularTotalGeralPorPeriodo(dataInicio, dataFim);
-
-            List<FaturamentoPorFormaPagamentoDTO> faturamentoPorFormaPagamento = consultaRepository.buscarFaturamentoPorFormaPagamento(dataInicio, dataFim);
-
-            List<FaturamentoPorConvenioDTO> faturamentoPorConvenio = consultaRepository.buscarFaturamentoPorConvenio(dataInicio, dataFim);
-
-            return new RelatorioOutDTO(
-                    totalGeral,
-                    faturamentoPorFormaPagamento,
-                    faturamentoPorConvenio
-            );
-
-        } catch (BusinessRuleException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new BusinessRuleException("Erro ao gerar relatório de faturamento: " + e.getMessage());
+        if (dataInicio == null || dataFim == null) {
+            throw new BusinessRuleException("Data inicio e data fim são obrigatórias");
         }
+        if (dataInicio.isAfter(dataFim)) {
+            throw new BusinessRuleException("Data de inicio não pode ser posterior a data fim");
+        }
+        double totalGeral = consultaRepository.calcularTotalGeralPorPeriodo(dataInicio, dataFim);
+        List<FaturamentoPorFormaPagamentoDTO> faturamentoPorFormaPagamento = consultaRepository.buscarFaturamentoPorFormaPagamento(dataInicio, dataFim);
+        List<FaturamentoPorConvenioDTO> faturamentoPorConvenio = consultaRepository.buscarFaturamentoPorConvenio(dataInicio, dataFim);
+        return new RelatorioOutDTO(totalGeral, faturamentoPorFormaPagamento, faturamentoPorConvenio);
     }
 }

@@ -59,8 +59,4 @@ public class MedicoModel {
     @OneToMany(mappedBy = "medico")
     private Set<ConsultaModel> consultas = new HashSet<>();
 
-    public MedicoDTO toDTO () {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(this, MedicoDTO.class);
-    }
 }

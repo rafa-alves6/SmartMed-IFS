@@ -1,13 +1,11 @@
 package br.com.smartmed.consultas.model;
 
-import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 
@@ -31,8 +29,8 @@ public class ConsultaModel {
     @NotBlank(message = "Status da consulta não pode ficar em branco")
     private String status;
 
-    @Column(name = "valor", nullable = true) // Pode ser consulta com convênio
-    private float valor;
+    @Column(name = "valor", nullable = true)
+    private Float valor;
 
     @Column(name = "observacoes", nullable = true)
     private String observacoes;
@@ -50,15 +48,10 @@ public class ConsultaModel {
     private FormaPagamentoModel formaPagamento;
 
     @ManyToOne
-    @JoinColumn(name = "convenioID", nullable = false)
+    @JoinColumn(name = "convenioID", nullable = true)
     private ConvenioModel convenio;
 
     @ManyToOne
     @JoinColumn(name = "recepcionistaID", nullable = false)
-
     private RecepcionistaModel recepcionista;
-    public ConsultaDTO toDTO() {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(this, ConsultaDTO.class);
-    }
 }
