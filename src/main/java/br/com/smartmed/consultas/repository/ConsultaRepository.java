@@ -27,25 +27,21 @@ public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long> {
     List<ConsultaModel> findAllByFormaPagamento_DescricaoContainingIgnoreCase(String formaPagamentoDescricao);
     boolean existsByMedico_IdAndDataHoraConsulta(Integer medicoId, LocalDateTime dataHoraConsulta);
 
-   // Relat´rio
-
-
+    // Relatório
     @Query("SELECT COALESCE(SUM(csta.valor), 0.0) FROM ConsultaModel csta " +
             "WHERE csta.status = 'REALIZADA' " +
-            "AND DATE(csta.dataHoraConsulta) BETWEEN :dataInicio AND :dataFim")
+            "AND CAST(csta.dataHoraConsulta AS DATE) BETWEEN :dataInicio AND :dataFim")
     double calcularTotalGeralPorPeriodo(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
-
 
     @Query("SELECT new br.com.smartmed.consultas.rest.dto.FaturamentoPorFormaPagamentoDTO(" +
             "pagamento.descricao, COALESCE(SUM(csta.valor), 0.0)) " +
             "FROM ConsultaModel csta " +
             "JOIN csta.formaPagamento pagamento " +
             "WHERE csta.status = 'REALIZADA' " +
-            "AND DATE(csta.dataHoraConsulta) BETWEEN :dataInicio AND :dataFim " +
+            "AND CAST(csta.dataHoraConsulta AS DATE) BETWEEN :dataInicio AND :dataFim " +
             "GROUP BY pagamento.descricao " +
             "ORDER BY pagamento.descricao")
     List<FaturamentoPorFormaPagamentoDTO> buscarFaturamentoPorFormaPagamento(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
-
 
     @Query("SELECT new br.com.smartmed.consultas.rest.dto.FaturamentoPorConvenioDTO(" +
             "cnv.nome, COALESCE(SUM(csta.valor), 0.0)) " +
@@ -53,9 +49,8 @@ public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long> {
             "JOIN csta.convenio cnv " +
             "WHERE csta.status = 'REALIZADA' " +
             "AND csta.convenio IS NOT NULL " +
-            "AND DATE(csta.dataHoraConsulta) BETWEEN :dataInicio AND :dataFim " +
+            "AND CAST(csta.dataHoraConsulta AS DATE) BETWEEN :dataInicio AND :dataFim " +
             "GROUP BY cnv.nome " +
             "ORDER BY cnv.nome")
     List<FaturamentoPorConvenioDTO> buscarFaturamentoPorConvenio(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
-
 }
