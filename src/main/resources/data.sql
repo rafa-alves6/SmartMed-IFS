@@ -13,7 +13,7 @@ INSERT INTO convenio (nome, cnpj, telefone, email, ativo) VALUES ('Plano Total',
 INSERT INTO paciente (nome, cpf, data_nascimento, telefone, email) VALUES ('Ana Silva', '11122233344', '1990-05-15', '79988887777', 'ana.silva@email.com');
 INSERT INTO paciente (nome, cpf, data_nascimento, telefone, email) VALUES ('Bruno Costa', '55566677788', '1988-11-30', '79966665555', 'bruno.costa@email.com');
 
-INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, status) VALUES ('Carla Mendes', '99988877766', '1995-02-20', '2023-01-10', NULL, '79955554444', 'carla.mendes@email.com', true);
+INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, status) VALUES ('Recepcionista Padrão', '99988877766', '2000-01-01', '2000-01-01', NULL, '11155554444', 'recepcionista.padrao@email.com', true);
 
 -- Inserir Medicos (dependem de Especialidade)
 INSERT INTO medico (nome, crm, telefone, email, valor_consulta_referencia, ativo, especialidadeid) VALUES ('Dr. Roberto Carlos', '12345SE', '79912345678', 'roberto.c@med.com', 250.00, true, 1);
