@@ -31,8 +31,14 @@ public class ConvenioController {
 
     @GetMapping()
     public ResponseEntity<List<ConvenioDTO>> obterTodos() {
-        List<ConvenioDTO> convenio = convenioService.buscarTodos();
-        return ResponseEntity.status(HttpStatus.OK).body(convenio);
+        List<ConvenioDTO> convenios = convenioService.buscarTodos();
+        return ResponseEntity.status(HttpStatus.OK).body(convenios);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<List<ConvenioDTO>> obterTodosPorStatus(@RequestParam boolean ativo) {
+        List<ConvenioDTO> convenios = convenioService.buscarTodosPorStatus(ativo);
+        return ResponseEntity.status(HttpStatus.OK).body(convenios);
     }
 
     @PostMapping()

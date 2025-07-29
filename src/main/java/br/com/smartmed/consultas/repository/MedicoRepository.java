@@ -13,6 +13,8 @@ public interface MedicoRepository extends JpaRepository<MedicoModel, Integer> {
     Optional<MedicoModel> findByCrm(String crm);
     List<MedicoModel> findAllByNomeContainingIgnoreCase(String nome);
     List<MedicoModel> findAllByEspecialidade(EspecialidadeModel especialidade);
+    List<MedicoModel> findAllByEspecialidadeAndAtivo(EspecialidadeModel especialidade, boolean ativo);
+
     boolean existsByCrm(String crm);
     boolean existsByEmail(String email);
 }

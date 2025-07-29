@@ -1,12 +1,9 @@
 package br.com.smartmed.consultas.service;
 
 import br.com.smartmed.consultas.exception.*;
-import br.com.smartmed.consultas.model.ConsultaModel;
-import br.com.smartmed.consultas.repository.ConsultaRepository;
-import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
-import br.com.smartmed.consultas.rest.dto.FaturamentoPorConvenioDTO;
-import br.com.smartmed.consultas.rest.dto.FaturamentoPorFormaPagamentoDTO;
-import br.com.smartmed.consultas.rest.dto.RelatorioOutDTO;
+import br.com.smartmed.consultas.model.*;
+import br.com.smartmed.consultas.repository.*;
+import br.com.smartmed.consultas.rest.dto.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +22,108 @@ public class ConsultaService {
     private ConsultaRepository consultaRepository;
 
     @Autowired
+    private MedicoRepository medicoRepository;
+
+    @Autowired
+    private PacienteRepository pacienteRepository;
+
+    @Autowired
+    private EspecialidadeRepository especialidadeRepository;
+
+    @Autowired
+    private ConvenioRepository convenioRepository;
+
+    @Autowired
+    private FormaPagamentoRepository formaPagamentoRepository;
+
+    @Autowired
+    private RecepcionistaRepository recepcionistaRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
+
+    @Transactional
+    public AgendamentoAutomaticoOutDTO agendamentoAutomatico(AgendamentoAutomaticoInDTO inDTO) {
+
+        PacienteModel paciente = pacienteRepository.findById(inDTO.getPacienteId())
+                .orElseThrow(() -> new ObjectNotFoundException("Paciente não encontrado."));
+
+        EspecialidadeModel especialidade = especialidadeRepository.findById(inDTO.getEspecialidadeId())
+                .orElseThrow(() -> new ObjectNotFoundException("Especialidade não encontrada."));
+
+        List<MedicoModel> medicosDisponiveis = medicoRepository.findAllByEspecialidadeAndAtivo(especialidade, true);
+
+        if (medicosDisponiveis.isEmpty()) {
+            throw new BusinessRuleException("Não há médicos ativos para a especialidade selecionada.");
+        }
+
+        LocalDateTime dataHoraAtual = inDTO.getDataHoraInicial();
+
+        for (MedicoModel medico : medicosDisponiveis) {
+            LocalDateTime dataHoraVerificacao = dataHoraAtual;
+
+            int limiteDias = 7;
+            LocalDateTime limiteDeBusca = dataHoraVerificacao.plusDays(limiteDias);
+
+            while (dataHoraVerificacao.isBefore(limiteDeBusca)) {
+
+                int fimExpediente = 18; // 18:00h
+                if (dataHoraVerificacao.getHour() >= fimExpediente) {
+                    dataHoraVerificacao = dataHoraVerificacao.toLocalDate().plusDays(1).atTime(8, 0);
+                    continue; // Continua o loop no próximo dia
+                }
+                int comecoExpediente = 8;
+                // Garante que a busca não comece antes do começo de o expediente
+                if(dataHoraVerificacao.getHour() < comecoExpediente){
+                    dataHoraVerificacao = dataHoraVerificacao.toLocalDate().atTime(comecoExpediente,0);
+                }
+
+                boolean horarioOcupado = consultaRepository.existsByMedico_IdAndDataHoraConsulta(medico.getId(), dataHoraVerificacao);
+
+                if (!horarioOcupado) {
+
+                    FormaPagamentoModel formaPagamento = formaPagamentoRepository.findById(inDTO.getFormaPagamentoId())
+                            .orElseThrow(() -> new ObjectNotFoundException("Forma de pagamento não encontrada."));
+
+                    // Assumindo um recepcionista padrão para agendamentos automáticos
+                    RecepcionistaModel recepcionista = recepcionistaRepository.findById(1)
+                            .orElseThrow(() -> new BusinessRuleException("Recepcionista padrão não encontrado para agendamento automático."));
+
+                    ConsultaModel novaConsulta = new ConsultaModel();
+                    novaConsulta.setPaciente(paciente);
+                    novaConsulta.setMedico(medico);
+                    novaConsulta.setDataHoraConsulta(dataHoraVerificacao);
+                    novaConsulta.setStatus("AGENDADA");
+                    novaConsulta.setFormaPagamento(formaPagamento);
+                    novaConsulta.setRecepcionista(recepcionista);
+
+                    float valorConsulta = medico.getValorConsultaReferencia();
+
+                    if (inDTO.getConvenioId() != 0) {
+                        ConvenioModel convenio = convenioRepository.findById(inDTO.getConvenioId())
+                                .orElseThrow(() -> new ObjectNotFoundException("Convênio não encontrado."));
+                        novaConsulta.setConvenio(convenio);
+                        valorConsulta *= 0.5f;
+                    }
+
+                    novaConsulta.setValor(valorConsulta);
+
+                    ConsultaModel consultaSalva = consultaRepository.save(novaConsulta);
+
+                    return new AgendamentoAutomaticoOutDTO(
+                            consultaSalva.getId(),
+                            "Sua consulta foi agendada com sucesso!",
+                            consultaSalva.getDataHoraConsulta(),
+                            consultaSalva.getPaciente().getNome(),
+                            consultaSalva.getMedico().getNome(),
+                            consultaSalva.getMedico().getEspecialidade().getNome(),
+                            consultaSalva.getValor());
+                }
+                dataHoraVerificacao = dataHoraVerificacao.plusMinutes(inDTO.getDuracaoConsultaMinutos());
+            }
+        }
+        throw new BusinessRuleException("Não foi encontrado um horário disponível para a especialidade desejada no período de 30 dias.");
+    }
 
     @Transactional(readOnly = true)
     public List<ConsultaDTO> buscarTodasPorHorario(LocalDateTime horario) {

@@ -1,6 +1,8 @@
 package br.com.smartmed.consultas.rest.controller;
 
 import br.com.smartmed.consultas.model.ConsultaModel;
+import br.com.smartmed.consultas.rest.dto.AgendamentoAutomaticoInDTO;
+import br.com.smartmed.consultas.rest.dto.AgendamentoAutomaticoOutDTO;
 import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
 import br.com.smartmed.consultas.service.ConsultaService;
 import jakarta.validation.Valid;
@@ -17,7 +19,13 @@ import java.util.List;
 @RequestMapping("/api/consulta")
 public class ConsultaController {
     @Autowired
-    private  ConsultaService consultaService;
+    private ConsultaService consultaService;
+
+    @PostMapping("/agendar-automatico")
+    public ResponseEntity<AgendamentoAutomaticoOutDTO> agendarAutomatico(@Valid @RequestBody AgendamentoAutomaticoInDTO agendamento) {
+        AgendamentoAutomaticoOutDTO consultaAgendada = consultaService.agendamentoAutomatico(agendamento);
+        return ResponseEntity.status(HttpStatus.CREATED).body(consultaAgendada);
+    }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<ConsultaDTO> buscarPorId(@PathVariable Long id) {
@@ -32,7 +40,7 @@ public class ConsultaController {
     }
 
     @GetMapping("/horario/{horario}")
-    public ResponseEntity<List<ConsultaDTO>> buscarPorHorario(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime horarioConsulta) {
+    public ResponseEntity<List<ConsultaDTO>> buscarPorHorario(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime horarioConsulta) {
         List<ConsultaDTO> consultas = consultaService.buscarTodasPorHorario(horarioConsulta);
         return ResponseEntity.status(HttpStatus.OK).body(consultas);
     }
