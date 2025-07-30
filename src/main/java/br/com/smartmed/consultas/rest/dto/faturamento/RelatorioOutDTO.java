@@ -1,4 +1,4 @@
-package br.com.smartmed.consultas.rest.dto;
+package br.com.smartmed.consultas.rest.dto.faturamento;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
