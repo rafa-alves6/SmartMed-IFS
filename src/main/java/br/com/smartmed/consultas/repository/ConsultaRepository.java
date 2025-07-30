@@ -1,9 +1,10 @@
 package br.com.smartmed.consultas.repository;
 
 import br.com.smartmed.consultas.model.ConsultaModel;
-import br.com.smartmed.consultas.rest.dto.FaturamentoPorConvenioDTO;
-import br.com.smartmed.consultas.rest.dto.FaturamentoPorFormaPagamentoDTO;
+import br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorConvenioDTO;
+import br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorFormaPagamentoDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long> {
+public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long>, JpaSpecificationExecutor<ConsultaModel> {
 
     List<ConsultaModel> findAllByPaciente_Cpf(String pacienteCpf);
     List<ConsultaModel> findAllByMedico_NomeContainingIgnoreCase(String medicoNome);
@@ -25,7 +26,9 @@ public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long> {
     List<ConsultaModel> findAllByConvenio_Cnpj(String convenioCnpj);
     List<ConsultaModel> findAllByRecepcionista_Id(Integer recepcionistaId);
     List<ConsultaModel> findAllByFormaPagamento_DescricaoContainingIgnoreCase(String formaPagamentoDescricao);
+    List<ConsultaModel> findAllByMedico_IdAndDataHoraConsultaBetween(Integer medicoId, LocalDateTime inicio, LocalDateTime fim);
     boolean existsByMedico_IdAndDataHoraConsulta(Integer medicoId, LocalDateTime dataHoraConsulta);
+
 
     // Relatório
     @Query("SELECT COALESCE(SUM(csta.valor), 0.0) FROM ConsultaModel csta " +
@@ -33,7 +36,7 @@ public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long> {
             "AND CAST(csta.dataHoraConsulta AS DATE) BETWEEN :dataInicio AND :dataFim")
     double calcularTotalGeralPorPeriodo(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
 
-    @Query("SELECT new br.com.smartmed.consultas.rest.dto.FaturamentoPorFormaPagamentoDTO(" +
+    @Query("SELECT new br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorFormaPagamentoDTO(" +
             "pagamento.descricao, COALESCE(SUM(csta.valor), 0.0)) " +
             "FROM ConsultaModel csta " +
             "JOIN csta.formaPagamento pagamento " +
@@ -43,7 +46,7 @@ public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long> {
             "ORDER BY pagamento.descricao")
     List<FaturamentoPorFormaPagamentoDTO> buscarFaturamentoPorFormaPagamento(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
 
-    @Query("SELECT new br.com.smartmed.consultas.rest.dto.FaturamentoPorConvenioDTO(" +
+    @Query("SELECT new br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorConvenioDTO(" +
             "cnv.nome, COALESCE(SUM(csta.valor), 0.0)) " +
             "FROM ConsultaModel csta " +
             "JOIN csta.convenio cnv " +

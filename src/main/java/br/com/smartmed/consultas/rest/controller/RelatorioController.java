@@ -1,6 +1,6 @@
 package br.com.smartmed.consultas.rest.controller;
 
-import br.com.smartmed.consultas.rest.dto.RelatorioOutDTO;
+import br.com.smartmed.consultas.rest.dto.faturamento.RelatorioOutDTO;
 import br.com.smartmed.consultas.service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
