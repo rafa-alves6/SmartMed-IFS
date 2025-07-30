@@ -3,6 +3,8 @@ package br.com.smartmed.consultas.rest.controller;
 import br.com.smartmed.consultas.model.EspecialidadeModel;
 import br.com.smartmed.consultas.model.MedicoModel;
 import br.com.smartmed.consultas.rest.dto.MedicoDTO;
+import br.com.smartmed.consultas.rest.dto.agendaMedica.AgendaInDTO;
+import br.com.smartmed.consultas.rest.dto.agendaMedica.AgendaOutDTO;
 import br.com.smartmed.consultas.service.MedicoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,12 @@ public class MedicoController {
     public ResponseEntity<List<MedicoDTO>> buscarPorNomeContendo(@RequestParam String nome) {
         List<MedicoDTO> medicos = medicoService.obterPorNome(nome);
         return ResponseEntity.status(HttpStatus.OK).body(medicos);
+    }
+
+    @PostMapping("/agenda")
+    public ResponseEntity<AgendaOutDTO> consultarAgenda(@Valid @RequestBody AgendaInDTO request) {
+        AgendaOutDTO agenda = medicoService.consultarAgenda(request);
+        return ResponseEntity.ok(agenda);
     }
 
     @PostMapping()

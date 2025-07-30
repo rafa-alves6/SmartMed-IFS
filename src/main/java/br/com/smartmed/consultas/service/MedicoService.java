@@ -1,16 +1,26 @@
 package br.com.smartmed.consultas.service;
 
 import br.com.smartmed.consultas.exception.*;
+import br.com.smartmed.consultas.model.ConsultaModel;
 import br.com.smartmed.consultas.model.EspecialidadeModel;
 import br.com.smartmed.consultas.model.MedicoModel;
+import br.com.smartmed.consultas.repository.ConsultaRepository;
 import br.com.smartmed.consultas.repository.MedicoRepository;
 import br.com.smartmed.consultas.rest.dto.MedicoDTO;
+import br.com.smartmed.consultas.rest.dto.agendaMedica.AgendaInDTO;
+import br.com.smartmed.consultas.rest.dto.agendaMedica.AgendaOutDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +31,48 @@ public class MedicoService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private ConsultaRepository consultaRepository;
+    @Transactional(readOnly = true)
+    public AgendaOutDTO consultarAgenda(AgendaInDTO inDTO) {
+        MedicoModel medico = medicoRepository.findById(inDTO.getMedicoId())
+                .orElseThrow(() -> new ObjectNotFoundException("Médico com ID " + inDTO.getMedicoId() + " não encontrado."));
+
+        if (!medico.isAtivo()) {
+            throw new BusinessRuleException("Não é possível consultar a agenda de um médico inativo.");
+        }
+
+        LocalDateTime inicioDoDia = inDTO.getData().atStartOfDay();
+        LocalDateTime fimDoDia = inDTO.getData().atTime(18, 0, 0);
+
+        List<ConsultaModel> consultasDoDia = consultaRepository.findAllByMedico_IdAndDataHoraConsultaBetween(medico.getId(), inicioDoDia, fimDoDia);
+        Set<LocalTime> horariosJaAgendados = consultasDoDia.stream()
+                .map(consulta -> consulta.getDataHoraConsulta().toLocalTime())
+                .collect(Collectors.toSet());
+
+        List<String> horariosOcupados = new ArrayList<>();
+        List<String> horariosDisponiveis = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        LocalTime horarioAtual = LocalTime.of(8, 0); // Início do expediente
+        LocalTime fimDoExpediente = LocalTime.of(18, 0); // Fim do expediente
+
+        while (horarioAtual.isBefore(fimDoExpediente)) {
+            boolean isHorarioPassado = inDTO.getData().isEqual(LocalDate.now()) && horarioAtual.isBefore(LocalTime.now());
+
+            if (!isHorarioPassado) {
+                if (horariosJaAgendados.contains(horarioAtual)) {
+                    horariosOcupados.add(horarioAtual.format(formatter));
+                } else {
+                    horariosDisponiveis.add(horarioAtual.format(formatter));
+                }
+            }
+            horarioAtual = horarioAtual.plusMinutes(30); // Duração padrão da consulta
+        }
+
+        return new AgendaOutDTO(medico.getNome(), inDTO.getData(), horariosOcupados, horariosDisponiveis);
+    }
 
     @Transactional(readOnly = true)
     public MedicoDTO obterPorId(Integer id) {
