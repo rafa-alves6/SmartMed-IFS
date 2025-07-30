@@ -1,9 +1,11 @@
 package br.com.smartmed.consultas.rest.controller;
 
 import br.com.smartmed.consultas.model.ConsultaModel;
-import br.com.smartmed.consultas.rest.dto.AgendamentoAutomaticoInDTO;
-import br.com.smartmed.consultas.rest.dto.AgendamentoAutomaticoOutDTO;
-import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
+import br.com.smartmed.consultas.rest.dto.*;
+import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoInDTO;
+import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoOutDTO;
+import br.com.smartmed.consultas.rest.dto.historico.HistoricoInDTO;
+import br.com.smartmed.consultas.rest.dto.historico.HistoricoOutDTO;
 import br.com.smartmed.consultas.service.ConsultaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,11 @@ public class ConsultaController {
         AgendamentoAutomaticoOutDTO consultaAgendada = consultaService.agendamentoAutomatico(agendamento);
         return ResponseEntity.status(HttpStatus.CREATED).body(consultaAgendada);
     }
-
+    @PostMapping("/historico")
+    public ResponseEntity<List<HistoricoOutDTO>> obterHistorico(@Valid @RequestBody HistoricoInDTO inDTO) {
+        List<HistoricoOutDTO> historico = consultaService.obterHistoricoConsultas(inDTO);
+        return ResponseEntity.ok(historico);
+    }
     @GetMapping("/id/{id}")
     public ResponseEntity<ConsultaDTO> buscarPorId(@PathVariable Long id) {
         ConsultaDTO consultaDTO = consultaService.buscarPorId(id);

@@ -3,14 +3,26 @@ package br.com.smartmed.consultas.service;
 import br.com.smartmed.consultas.exception.*;
 import br.com.smartmed.consultas.model.*;
 import br.com.smartmed.consultas.repository.*;
-import br.com.smartmed.consultas.rest.dto.*;
+import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
+import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoInDTO;
+import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoOutDTO;
+import br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorConvenioDTO;
+import br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorFormaPagamentoDTO;
+import br.com.smartmed.consultas.rest.dto.faturamento.RelatorioOutDTO;
+import br.com.smartmed.consultas.rest.dto.historico.HistoricoInDTO;
+import br.com.smartmed.consultas.rest.dto.historico.HistoricoOutDTO;
+import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -85,7 +97,7 @@ public class ConsultaService {
                     FormaPagamentoModel formaPagamento = formaPagamentoRepository.findById(inDTO.getFormaPagamentoId())
                             .orElseThrow(() -> new ObjectNotFoundException("Forma de pagamento não encontrada."));
 
-                    // Assumindo um recepcionista padrão para agendamentos automáticos
+                    // Recepcionista padrão para agendamentos automáticos
                     RecepcionistaModel recepcionista = recepcionistaRepository.findById(1)
                             .orElseThrow(() -> new BusinessRuleException("Recepcionista padrão não encontrado para agendamento automático."));
 
@@ -291,5 +303,49 @@ public class ConsultaService {
         List<FaturamentoPorFormaPagamentoDTO> faturamentoPorFormaPagamento = consultaRepository.buscarFaturamentoPorFormaPagamento(dataInicio, dataFim);
         List<FaturamentoPorConvenioDTO> faturamentoPorConvenio = consultaRepository.buscarFaturamentoPorConvenio(dataInicio, dataFim);
         return new RelatorioOutDTO(totalGeral, faturamentoPorFormaPagamento, faturamentoPorConvenio);
+    }
+    @Transactional(readOnly = true)
+    public List<HistoricoOutDTO> obterHistoricoConsultas(HistoricoInDTO inDTO) {
+
+        pacienteRepository.findById(inDTO.getPacienteId())
+                .orElseThrow(() -> new ObjectNotFoundException("Paciente com ID " + inDTO.getPacienteId() + " não encontrado."));
+
+        Specification<ConsultaModel> spec = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.equal(root.get("paciente").get("id"), inDTO.getPacienteId()));
+
+            if (inDTO.getDataInicio() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("dataHoraConsulta"), inDTO.getDataInicio().atStartOfDay()));
+            }
+            if (inDTO.getDataFim() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("dataHoraConsulta"), inDTO.getDataFim().atTime(23, 59, 59)));
+            }
+            if (inDTO.getMedicoId() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("medico").get("id"), inDTO.getMedicoId()));
+            }
+            if (StringUtils.hasText(inDTO.getStatus())) {
+                predicates.add(criteriaBuilder.equal(criteriaBuilder.upper(root.get("status")), inDTO.getStatus().toUpperCase()));
+            }
+            if (inDTO.getEspecialidadeId() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("medico").get("especialidade").get("id"), inDTO.getEspecialidadeId()));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "dataHoraConsulta");
+
+        List<ConsultaModel> consultas = consultaRepository.findAll(spec, sort);
+
+        return consultas.stream()
+                .map(consulta -> new HistoricoOutDTO(
+                        consulta.getDataHoraConsulta(),
+                        consulta.getMedico().getNome(),
+                        consulta.getMedico().getEspecialidade().getNome(),
+                        consulta.getValor(),
+                        consulta.getStatus(),
+                        consulta.getObservacoes()
+                ))
+                .collect(Collectors.toList());
     }
 }
