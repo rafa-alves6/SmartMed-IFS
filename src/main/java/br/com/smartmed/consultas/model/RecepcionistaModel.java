@@ -1,6 +1,5 @@
 package br.com.smartmed.consultas.model;
 
-import br.com.smartmed.consultas.rest.dto.RecepcionistaDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
-import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -17,7 +15,6 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 @Table(name = "recepcionista")
 public class RecepcionistaModel {
@@ -58,9 +55,8 @@ public class RecepcionistaModel {
 
     @Column(name = "status", nullable = false)
     @NotNull(message = "O status do(a) recepcionista não pode ser nulo")
-    private boolean status;
+    private String status;
 
     @OneToMany(mappedBy = "recepcionista")
     private Set<ConsultaModel> consultas = new HashSet<>();
-
 }

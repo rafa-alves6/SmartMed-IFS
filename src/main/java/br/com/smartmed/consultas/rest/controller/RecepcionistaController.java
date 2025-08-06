@@ -2,6 +2,8 @@ package br.com.smartmed.consultas.rest.controller;
 
 import br.com.smartmed.consultas.model.RecepcionistaModel;
 import br.com.smartmed.consultas.rest.dto.RecepcionistaDTO;
+import br.com.smartmed.consultas.rest.dto.RespostaPaginadaDTO;
+import br.com.smartmed.consultas.rest.dto.filtrar.ListarRecepcionistaDTO;
 import br.com.smartmed.consultas.service.RecepcionistaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,12 @@ import java.util.List;
 public class RecepcionistaController {
     @Autowired
     private RecepcionistaService recepcionistaService;
+
+    @PostMapping("/filtrar")
+    public ResponseEntity<RespostaPaginadaDTO<RecepcionistaDTO>> filtrar(@RequestBody ListarRecepcionistaDTO dto) {
+        RespostaPaginadaDTO<RecepcionistaDTO> resposta = recepcionistaService.filtrar(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(resposta);
+    }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<RecepcionistaDTO> obterPorId(@PathVariable Integer id) {

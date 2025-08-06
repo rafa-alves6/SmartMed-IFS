@@ -4,8 +4,11 @@ import br.com.smartmed.consultas.exception.*;
 import br.com.smartmed.consultas.model.RecepcionistaModel;
 import br.com.smartmed.consultas.repository.RecepcionistaRepository;
 import br.com.smartmed.consultas.rest.dto.RecepcionistaDTO;
+import br.com.smartmed.consultas.rest.dto.RespostaPaginadaDTO;
+import br.com.smartmed.consultas.rest.dto.filtrar.ListarRecepcionistaDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +23,18 @@ public class RecepcionistaService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Transactional(readOnly = true)
+    public RespostaPaginadaDTO<RecepcionistaDTO> filtrar(ListarRecepcionistaDTO dto) {
+        Page<RecepcionistaModel> pagina = recepcionistaRepository.filtrar(
+                dto.getStatus(),
+                dto.getDataInicio(),
+                dto.getDataFim(),
+                dto.toPageable()
+        );
+
+        return RespostaPaginadaDTO.fromPage(pagina.map(recepcionista -> modelMapper.map(recepcionista, RecepcionistaDTO.class)));
+    }
 
     @Transactional(readOnly = true)
     public RecepcionistaDTO obterPorId(Integer id) {
@@ -50,8 +65,8 @@ public class RecepcionistaService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecepcionistaDTO> obterTodosPorStatus(boolean ativo) {
-        List<RecepcionistaModel> recepcionistas = recepcionistaRepository.findAllByStatus(ativo);
+    public List<RecepcionistaDTO> obterTodosPorStatus(String status) {
+        List<RecepcionistaModel> recepcionistas = recepcionistaRepository.findAllByStatus(status);
         return recepcionistas.stream()
                 .map(recepcionista -> modelMapper.map(recepcionista, RecepcionistaDTO.class))
                 .collect(Collectors.toList());

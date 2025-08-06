@@ -20,8 +20,8 @@ INSERT INTO paciente (nome, cpf, data_nascimento, telefone, email) VALUES ('Dani
 INSERT INTO paciente (nome, cpf, data_nascimento, telefone, email) VALUES ('Eduarda Lima', '33344455566', '1985-03-18', '79999993333', 'eduarda.lima@email.com');
 
 
-INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, status) VALUES ('Recepcionista Padrão', '99988877766', '2000-01-01', '2020-01-01', NULL, '11155554444', 'recepcionista.padrao@email.com', true);
-INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, status) VALUES ('Fernanda Rocha', '12312312312', '1998-07-19', '2022-03-15', NULL, '79912341234', 'fernanda.rocha@email.com', true);
+INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, status) VALUES ('Recepcionista Padrão', '99988877766', '2000-01-01', '2020-01-01', NULL, '11155554444', 'recepcionista.padrao@email.com', 'ATIVO');
+INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, status) VALUES ('Fernanda Rocha', '12312312312', '1998-07-19', '2022-03-15', NULL, '79912341234', 'fernanda.rocha@email.com', 'ATIVO');
 
 
 INSERT INTO medico (nome, crm, telefone, email, valor_consulta_referencia, ativo, especialidadeid) VALUES ('Dr. Roberto Carlos', '12345SE', '79912345678', 'roberto.c@med.com', 250.00, true, 1);

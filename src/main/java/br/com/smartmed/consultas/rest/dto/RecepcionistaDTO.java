@@ -1,7 +1,6 @@
 package br.com.smartmed.consultas.rest.dto;
 
 import lombok.Data;
-
 import java.time.LocalDate;
 
 @Data
@@ -14,6 +13,5 @@ public class RecepcionistaDTO {
     private LocalDate dataDemissao;
     private String telefone;
     private String email;
-    private boolean ativo;
-
+    private String status;
 }
