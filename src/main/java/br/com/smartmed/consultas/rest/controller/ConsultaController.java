@@ -1,7 +1,7 @@
 package br.com.smartmed.consultas.rest.controller;
 
 import br.com.smartmed.consultas.model.ConsultaModel;
-import br.com.smartmed.consultas.rest.dto.*;
+import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoInDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoOutDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoInDTO;
