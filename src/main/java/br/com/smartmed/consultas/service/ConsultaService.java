@@ -3,9 +3,12 @@ package br.com.smartmed.consultas.service;
 import br.com.smartmed.consultas.exception.*;
 import br.com.smartmed.consultas.model.*;
 import br.com.smartmed.consultas.repository.*;
+import br.com.smartmed.consultas.rest.dto.*;
 import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoInDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoOutDTO;
+import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaDTO;
+import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaResponseDTO;
 import br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorConvenioDTO;
 import br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorFormaPagamentoDTO;
 import br.com.smartmed.consultas.rest.dto.faturamento.RelatorioOutDTO;
@@ -53,6 +56,25 @@ public class ConsultaService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+
+    @Transactional
+    public CancelarConsultaResponseDTO cancelar(CancelarConsultaDTO dto) {
+        ConsultaModel consulta = consultaRepository.findById(dto.getConsultaID())
+                .orElseThrow(() -> new ObjectNotFoundException("Consulta com ID " + dto.getConsultaID() + " não encontrada."));
+
+        if (!consulta.getStatus().equalsIgnoreCase("AGENDADA")) {
+            throw new BusinessRuleException("Apenas consultas com status 'AGENDADA' podem ser canceladas.");
+        }
+
+        if (consulta.getDataHoraConsulta().isBefore(LocalDateTime.now())) {
+            throw new BusinessRuleException("Não é possível cancelar consultas que já ocorreram.");
+        }
+
+        consultaRepository.cancelarConsulta(dto.getConsultaID(), dto.getMotivo());
+
+        return new CancelarConsultaResponseDTO("Consulta cancelada com sucesso", "CANCELADA");
+    }
 
     @Transactional
     public AgendamentoAutomaticoOutDTO agendamentoAutomatico(AgendamentoAutomaticoInDTO inDTO) {

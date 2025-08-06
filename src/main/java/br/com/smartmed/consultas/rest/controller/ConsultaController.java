@@ -4,6 +4,8 @@ import br.com.smartmed.consultas.model.ConsultaModel;
 import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoInDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoOutDTO;
+import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaDTO;
+import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaResponseDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoInDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoOutDTO;
 import br.com.smartmed.consultas.service.ConsultaService;
@@ -98,7 +100,11 @@ public class ConsultaController {
         ConsultaDTO consultaDTO = consultaService.salvar(novaConsulta);
         return ResponseEntity.status(HttpStatus.CREATED).body(consultaDTO);
     }
-
+    @PutMapping("/cancelar")
+    public ResponseEntity<CancelarConsultaResponseDTO> cancelarConsulta(@Valid @RequestBody CancelarConsultaDTO dto) {
+        CancelarConsultaResponseDTO response = consultaService.cancelar(dto);
+        return ResponseEntity.ok(response);
+    }
     @PutMapping()
     public ResponseEntity<ConsultaDTO> atualizar(@Valid @RequestBody ConsultaModel consultaExistente) {
         ConsultaDTO consultaDTO = consultaService.atualizar(consultaExistente);
@@ -110,4 +116,5 @@ public class ConsultaController {
         consultaService.deletar(consultaExistente);
         return  ResponseEntity.noContent().build();
     }
+
 }
