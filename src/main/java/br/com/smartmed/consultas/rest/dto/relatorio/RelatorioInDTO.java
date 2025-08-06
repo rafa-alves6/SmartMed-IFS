@@ -1,4 +1,4 @@
-package br.com.smartmed.consultas.rest.dto.faturamento;
+package br.com.smartmed.consultas.rest.dto.relatorio;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

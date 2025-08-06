@@ -8,6 +8,8 @@ import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaResponseDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoInDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoOutDTO;
+import br.com.smartmed.consultas.rest.dto.relatorio.RelatorioInDTO;
+import br.com.smartmed.consultas.rest.dto.relatorio.especialidadesFrequentes.EspecialidadeFrequenteOutDTO;
 import br.com.smartmed.consultas.service.ConsultaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +102,12 @@ public class ConsultaController {
         ConsultaDTO consultaDTO = consultaService.salvar(novaConsulta);
         return ResponseEntity.status(HttpStatus.CREATED).body(consultaDTO);
     }
+    @PostMapping("/especialidades-frequentes")
+    public ResponseEntity<List<EspecialidadeFrequenteOutDTO>> gerarRelatorioEspecialidades(@Valid @RequestBody RelatorioInDTO inDTO) {
+        List<EspecialidadeFrequenteOutDTO> relatorio = consultaService.gerarRelatorioEspecialidadesFrequentes(inDTO);
+        return ResponseEntity.ok(relatorio);
+    }
+
     @PutMapping("/cancelar")
     public ResponseEntity<CancelarConsultaResponseDTO> cancelarConsulta(@Valid @RequestBody CancelarConsultaDTO dto) {
         CancelarConsultaResponseDTO response = consultaService.cancelar(dto);

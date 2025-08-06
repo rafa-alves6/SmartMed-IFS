@@ -1,6 +1,6 @@
 package br.com.smartmed.consultas.rest.controller;
 
-import br.com.smartmed.consultas.rest.dto.faturamento.RelatorioOutDTO;
+import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoOutDTO;
 import br.com.smartmed.consultas.service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,15 +21,15 @@ public class RelatorioController {
     private ConsultaService consultaService;
 
     @GetMapping("/faturamento")
-    public ResponseEntity<RelatorioOutDTO> gerarRelatorioFaturamento(@RequestParam("dataInicio")
+    public ResponseEntity<FaturamentoOutDTO> gerarRelatorioFaturamento(@RequestParam("dataInicio")
                                                                      @DateTimeFormat(pattern = "yyyy-MM-dd")
                                                                      LocalDate dataInicio,
 
-                                                                     @RequestParam("dataFim")
+                                                                       @RequestParam("dataFim")
                                                                      @DateTimeFormat(pattern = "yyyy-MM-dd")
                                                                      LocalDate dataFim)
     {
-        RelatorioOutDTO relatorio = consultaService.gerarRelatorioFaturamento(dataInicio, dataFim);
+        FaturamentoOutDTO relatorio = consultaService.gerarRelatorioFaturamento(dataInicio, dataFim);
         return ResponseEntity.status(HttpStatus.OK).body(relatorio);
     }
 }

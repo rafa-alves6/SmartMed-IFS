@@ -1,8 +1,9 @@
 package br.com.smartmed.consultas.repository;
 
 import br.com.smartmed.consultas.model.ConsultaModel;
-import br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorConvenioDTO;
-import br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorFormaPagamentoDTO;
+import br.com.smartmed.consultas.rest.dto.relatorio.especialidadesFrequentes.EspecialidadeFrequenteOutDTO;
+import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoPorConvenioDTO;
+import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoPorFormaPagamentoDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -23,15 +24,29 @@ public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long>, 
     @Transactional
     @Query(
             value = "UPDATE consulta " +
-            "SET status = 'CANCELADA', " +
-            "observacoes = :motivo " +
-            "WHERE id = :consultaId",
+                    "SET status = 'CANCELADA', " +
+                    "observacoes = :motivo " +
+                    "WHERE id = :consultaId",
             nativeQuery = true
     )
     void cancelarConsulta(
             @Param("consultaId") Long consultaId,
             @Param("motivo") String motivo
     );
+    @Query("SELECT new br.com.smartmed.consultas.rest.dto.relatorio.especialidadesFrequentes.EspecialidadeFrequenteOutDTO(e.nome, COUNT(c)) " +
+            "FROM ConsultaModel c " +
+            "JOIN c.medico m " +
+            "JOIN m.especialidade e " +
+            "WHERE c.status = 'REALIZADA' " +
+            "AND CAST(c.dataHoraConsulta AS DATE) BETWEEN :dataInicio AND :dataFim " +
+            "GROUP BY e.nome " +
+            "ORDER BY COUNT(c) DESC"
+    )
+    List<EspecialidadeFrequenteOutDTO> buscarEspecialidadesMaisAtendidas(
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim")    LocalDate dataFim
+    );
+
 
     List<ConsultaModel> findAllByPaciente_Cpf(String pacienteCpf);
     List<ConsultaModel> findAllByMedico_NomeContainingIgnoreCase(String medicoNome);
@@ -52,7 +67,7 @@ public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long>, 
             "AND CAST(csta.dataHoraConsulta AS DATE) BETWEEN :dataInicio AND :dataFim")
     double calcularTotalGeralPorPeriodo(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
 
-    @Query("SELECT new br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorFormaPagamentoDTO(" +
+    @Query("SELECT new br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoPorFormaPagamentoDTO(" +
             "pagamento.descricao, COALESCE(SUM(csta.valor), 0.0)) " +
             "FROM ConsultaModel csta " +
             "JOIN csta.formaPagamento pagamento " +
@@ -62,7 +77,7 @@ public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long>, 
             "ORDER BY pagamento.descricao")
     List<FaturamentoPorFormaPagamentoDTO> buscarFaturamentoPorFormaPagamento(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
 
-    @Query("SELECT new br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorConvenioDTO(" +
+    @Query("SELECT new br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoPorConvenioDTO(" +
             "cnv.nome, COALESCE(SUM(csta.valor), 0.0)) " +
             "FROM ConsultaModel csta " +
             "JOIN csta.convenio cnv " +

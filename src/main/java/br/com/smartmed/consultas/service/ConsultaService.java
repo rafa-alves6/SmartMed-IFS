@@ -3,17 +3,18 @@ package br.com.smartmed.consultas.service;
 import br.com.smartmed.consultas.exception.*;
 import br.com.smartmed.consultas.model.*;
 import br.com.smartmed.consultas.repository.*;
-import br.com.smartmed.consultas.rest.dto.*;
 import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoInDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoOutDTO;
 import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaResponseDTO;
-import br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorConvenioDTO;
-import br.com.smartmed.consultas.rest.dto.faturamento.FaturamentoPorFormaPagamentoDTO;
-import br.com.smartmed.consultas.rest.dto.faturamento.RelatorioOutDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoInDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoOutDTO;
+import br.com.smartmed.consultas.rest.dto.relatorio.RelatorioInDTO;
+import br.com.smartmed.consultas.rest.dto.relatorio.especialidadesFrequentes.EspecialidadeFrequenteOutDTO;
+import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoOutDTO;
+import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoPorConvenioDTO;
+import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoPorFormaPagamentoDTO;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
 @Service
 public class ConsultaService {
 
+    // ... (injeções e métodos existentes)
     @Autowired
     private ConsultaRepository consultaRepository;
 
@@ -314,7 +316,7 @@ public class ConsultaService {
     }
 
     @Transactional(readOnly = true)
-    public RelatorioOutDTO gerarRelatorioFaturamento(LocalDate dataInicio, LocalDate dataFim) {
+    public FaturamentoOutDTO gerarRelatorioFaturamento(LocalDate dataInicio, LocalDate dataFim) {
         if (dataInicio == null || dataFim == null) {
             throw new BusinessRuleException("Data inicio e data fim são obrigatórias");
         }
@@ -324,8 +326,19 @@ public class ConsultaService {
         double totalGeral = consultaRepository.calcularTotalGeralPorPeriodo(dataInicio, dataFim);
         List<FaturamentoPorFormaPagamentoDTO> faturamentoPorFormaPagamento = consultaRepository.buscarFaturamentoPorFormaPagamento(dataInicio, dataFim);
         List<FaturamentoPorConvenioDTO> faturamentoPorConvenio = consultaRepository.buscarFaturamentoPorConvenio(dataInicio, dataFim);
-        return new RelatorioOutDTO(totalGeral, faturamentoPorFormaPagamento, faturamentoPorConvenio);
+        return new FaturamentoOutDTO(totalGeral, faturamentoPorFormaPagamento, faturamentoPorConvenio);
     }
+    @Transactional(readOnly = true)
+    public List<EspecialidadeFrequenteOutDTO> gerarRelatorioEspecialidadesFrequentes(RelatorioInDTO inDTO) {
+        if (inDTO.getDataInicio() == null || inDTO.getDataFim() == null) {
+            throw new BusinessRuleException("Data de início e data de fim são obrigatórias.");
+        }
+        if (inDTO.getDataInicio().isAfter(inDTO.getDataFim())) {
+            throw new BusinessRuleException("A data de início não pode ser posterior à data de fim.");
+        }
+        return consultaRepository.buscarEspecialidadesMaisAtendidas(inDTO.getDataInicio(), inDTO.getDataFim());
+    }
+
     @Transactional(readOnly = true)
     public List<HistoricoOutDTO> obterHistoricoConsultas(HistoricoInDTO inDTO) {
 

@@ -1,4 +1,4 @@
-package br.com.smartmed.consultas.rest.dto.faturamento;
+package br.com.smartmed.consultas.rest.dto.relatorio.faturamento;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RelatorioOutDTO {
+public class FaturamentoOutDTO {
     private double totalGeral;
     private List<FaturamentoPorFormaPagamentoDTO> porFormaPagamento;
     private List<FaturamentoPorConvenioDTO> porConvenio;
