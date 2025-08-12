@@ -8,6 +8,8 @@ import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaResponseDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoInDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoOutDTO;
+import br.com.smartmed.consultas.rest.dto.reagendamento.ReagendamentoInDTO;
+import br.com.smartmed.consultas.rest.dto.reagendamento.ReagendamentoOutDTO;
 import br.com.smartmed.consultas.rest.dto.relatorio.RelatorioInDTO;
 import br.com.smartmed.consultas.rest.dto.relatorio.especialidadesFrequentes.EspecialidadeFrequenteOutDTO;
 import br.com.smartmed.consultas.service.ConsultaService;
@@ -111,6 +113,11 @@ public class ConsultaController {
     @PutMapping("/cancelar")
     public ResponseEntity<CancelarConsultaResponseDTO> cancelarConsulta(@Valid @RequestBody CancelarConsultaDTO dto) {
         CancelarConsultaResponseDTO response = consultaService.cancelar(dto);
+        return ResponseEntity.ok(response);
+    }
+    @PutMapping("/reagendar")
+    public ResponseEntity<ReagendamentoOutDTO> reagendarConsulta(@Valid @RequestBody ReagendamentoInDTO inDTO) {
+        ReagendamentoOutDTO response = consultaService.reagendarConsulta(inDTO);
         return ResponseEntity.ok(response);
     }
     @PutMapping()

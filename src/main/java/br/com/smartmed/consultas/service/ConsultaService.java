@@ -10,6 +10,8 @@ import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaResponseDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoInDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoOutDTO;
+import br.com.smartmed.consultas.rest.dto.reagendamento.ReagendamentoInDTO;
+import br.com.smartmed.consultas.rest.dto.reagendamento.ReagendamentoOutDTO;
 import br.com.smartmed.consultas.rest.dto.relatorio.RelatorioInDTO;
 import br.com.smartmed.consultas.rest.dto.relatorio.especialidadesFrequentes.EspecialidadeFrequenteOutDTO;
 import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoOutDTO;
@@ -58,6 +60,8 @@ public class ConsultaService {
 
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private MedicoService medicoService;
 
 
     @Transactional
@@ -382,5 +386,49 @@ public class ConsultaService {
                         consulta.getObservacoes()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ReagendamentoOutDTO reagendarConsulta(ReagendamentoInDTO inDTO) {
+        // A nova data deve ser no futuro
+        if (inDTO.getNovaDataHora().isBefore(LocalDateTime.now().plusMinutes(1))) {
+            throw new BusinessRuleException("A data de reagendamento deve ser no futuro.");
+        }
+
+        ConsultaModel consultaOriginal = consultaRepository.findById(inDTO.getConsultaID())
+                .orElseThrow(() -> new BusinessRuleException("Consulta não encontrada."));
+
+        // Só pode reagendar com até 30 minutos de antecedência
+        int limiteReagendamentoMinutos = 30;
+        LocalDateTime agora = LocalDateTime.now();
+        LocalDateTime limiteParaReagendar = consultaOriginal.getDataHoraConsulta().minusMinutes(limiteReagendamentoMinutos);
+
+        if (agora.isAfter(limiteParaReagendar)) {
+            throw new BusinessRuleException("Reagendamento não permitido. Faltam menos de 30 minutos para a consulta.");
+        }
+
+        // Tem que ser dentro do horario de expediente
+        int inicioExpediente = 8, fimExpediente = 18;
+        LocalDateTime novaData = inDTO.getNovaDataHora();
+        int hora = novaData.getHour();
+        if (hora < inicioExpediente || hora >= fimExpediente) {
+            throw new BusinessRuleException("As consultas devem ser agendadas dentro do horario de funcionamento (" + inicioExpediente + "h a " + fimExpediente + "h)");
+        }
+        Optional<ConsultaModel> agendaOcupada = consultaRepository.findByMedico_IdAndDataHoraConsulta(
+                consultaOriginal.getMedico().getId(),
+                inDTO.getNovaDataHora()
+        );
+
+        if (agendaOcupada.isPresent()  && !agendaOcupada.get().getId().equals(consultaOriginal.getId())) {
+            throw new BusinessRuleException("O médico não possui agenda livre no horário solicitado.");
+        }
+
+        consultaOriginal.setDataHoraConsulta(inDTO.getNovaDataHora());
+        ConsultaModel consultaAtualizada = consultaRepository.save(consultaOriginal);
+
+        return new ReagendamentoOutDTO(
+                "Consulta reagendada com sucesso",
+                consultaAtualizada.getDataHoraConsulta()
+        );
     }
 }

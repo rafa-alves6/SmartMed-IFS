@@ -61,6 +61,7 @@ public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long>, 
     boolean existsByMedico_IdAndDataHoraConsulta(Integer medicoId, LocalDateTime dataHoraConsulta);
 
 
+
     // Relatório
     @Query("SELECT COALESCE(SUM(csta.valor), 0.0) FROM ConsultaModel csta " +
             "WHERE csta.status = 'REALIZADA' " +
