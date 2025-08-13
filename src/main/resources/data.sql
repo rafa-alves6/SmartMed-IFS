@@ -27,9 +27,9 @@ INSERT INTO paciente (nome, cpf, data_nascimento, telefone, email) VALUES ('Mari
 
 
 -- Inserindo 3 recepcionistas, uma delas inativa
-INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, status) VALUES ('Recepcionista Padrão', '99988877766', '2000-01-01', '2020-01-01', NULL, '11155554444', 'recepcionista.padrao@email.com', 'ATIVO');
-INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, status) VALUES ('Fernanda Rocha', '12312312312', '1998-07-19', '2022-03-15', NULL, '79912341234', 'fernanda.rocha@email.com', 'ATIVO');
-INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, status) VALUES ('Juliana Almeida', '32132132132', '1995-01-20', '2021-06-01', '2024-05-30', '79988889999', 'juliana.almeida@email.com', 'INATIVO');
+INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, ativo, bloqueado) VALUES ('Recepcionista Padrão', '99988877766', '2000-01-01', '2020-01-01', NULL, '11155554444', 'recepcionista.padrao@email.com', true, false);
+INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, ativo, bloqueado) VALUES ('Fernanda Rocha', '12312312312', '1998-07-19', '2022-03-15', NULL, '79912341234', 'fernanda.rocha@email.com', true, false);
+INSERT INTO recepcionista (nome, cpf, data_nascimento, data_admissao, data_demissao, telefone, email, ativo, bloqueado) VALUES ('Juliana Almeida', '32132132132', '1995-01-20', '2021-06-01', '2024-05-30', '79988889999', 'juliana.almeida@email.com', false, false);
 
 
 -- Inserindo 8 médicos, com diferentes especialidades e status
@@ -43,26 +43,51 @@ INSERT INTO medico (nome, crm, telefone, email, valor_consulta_referencia, ativo
 INSERT INTO medico (nome, crm, telefone, email, valor_consulta_referencia, ativo, especialidadeid) VALUES ('Dra. Beatriz Santos', '11223SE', '79922227777', 'beatriz.s@med.com', 250.00, true, 1);
 
 
--- Inserindo um conjunto diversificado de consultas (Agendadas, Realizadas, Canceladas)
 -- Consultas AGENDADAS (futuras)
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-10T10:00:00', 'AGENDADA', 125.00, 'Paciente com dor no peito.', 1, 1, 1, 1, 1);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-11T15:30:00', 'AGENDADA', 150.00, 'Consulta de rotina coberta pelo convênio.', 2, 2, 3, 2, 1);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-09-05T09:00:00', 'AGENDADA', 280.00, 'Dor no joelho após esporte.', 3, 3, 2, NULL, 2);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-09-15T11:30:00', 'AGENDADA', 160.00, 'Exames de rotina ginecológicos.', 4, 4, 4, 1, 2);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-20T14:00:00', 'AGENDADA', 220.00, 'Acompanhamento pediátrico.', 7, 5, 1, NULL, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-09-10T10:00:00', 'AGENDADA', 125.00, 'Paciente com dor no peito.', 1, 1, 1, 1, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-09-11T15:30:00', 'AGENDADA', 150.00, 'Consulta de rotina coberta pelo convênio.', 2, 2, 3, 2, 1);
 
 -- Consultas REALIZADAS (passadas)
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2024-06-20T11:00:00', 'REALIZADA', 125.00, 'Check-up anual cardiológico.', 1, 1, 1, 1, 1);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2024-06-22T09:30:00', 'REALIZADA', 300.00, 'Remoção de mancha na pele.', 2, 2, 2, NULL, 1);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2024-07-01T14:00:00', 'REALIZADA', 125.00, 'Acompanhamento de pressão arterial.', 2, 8, 3, 2, 1);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2024-07-05T16:00:00', 'REALIZADA', 300.00, 'Queixa de acne persistente.', 1, 7, 1, NULL, 1);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2024-10-10T10:00:00', 'REALIZADA', 220.00, 'Vacinação de rotina.', 5, 5, 2, NULL, 1);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2024-11-20T14:30:00', 'REALIZADA', 140.00, 'Análise de raio-x do tornozelo.', 3, 3, 4, 2, 2);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2023-05-10T08:00:00', 'REALIZADA', 150.00, 'Tratamento de micose.', 6, 2, 1, 2, 2);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2023-05-12T11:00:00', 'REALIZADA', 125.00, 'Eletrocardiograma.', 6, 8, 1, 2, 2);
+INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2024-07-20T11:00:00', 'REALIZADA', 125.00, 'Check-up anual cardiológico.', 1, 1, 1, 1, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2024-07-22T09:30:00', 'REALIZADA', 300.00, 'Remoção de mancha na pele.', 2, 2, 2, NULL, 1);
 
-
--- Consultas CANCELADAS (passadas e futuras)
+-- Consultas CANCELADAS
 INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-01-15T08:00:00', 'CANCELADA', 125.00, 'Paciente cancelou por motivo de viagem.', 1, 1, 1, 1, 1);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-02-10T17:00:00', 'CANCELADA', 320.00, 'Médica cancelou por emergência.', 4, 4, 1, NULL, 2);
-INSERT INTO consulta (data_hora_consulta, status, valor, observacoes, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2024-01-20T09:00:00', 'CANCELADA', 280.00, 'Paciente não compareceu.', 3, 3, 2, NULL, 2);
+
+
+-- /////////// NOVAS CONSULTAS REALIZADAS EM AGOSTO DE 2025 ///////////
+
+-- Dr. Roberto Carlos (ID 1) - 8 consultas
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-01T09:00:00', 'REALIZADA', 250.00, 1, 1, 2, NULL, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-01T10:00:00', 'REALIZADA', 125.00, 2, 1, 1, 1, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-05T11:00:00', 'REALIZADA', 250.00, 3, 1, 3, NULL, 2);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-05T14:00:00', 'REALIZADA', 125.00, 4, 1, 1, 2, 2);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-12T09:30:00', 'REALIZADA', 250.00, 5, 1, 2, NULL, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-12T15:00:00', 'REALIZADA', 250.00, 6, 1, 2, NULL, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-20T08:00:00', 'REALIZADA', 125.00, 7, 1, 1, 1, 2);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-20T16:00:00', 'REALIZADA', 250.00, 1, 1, 4, NULL, 2);
+
+-- Dra. Livia Andrade (ID 2) - 6 consultas
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-02T09:00:00', 'REALIZADA', 150.00, 1, 2, 1, 2, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-02T10:00:00', 'REALIZADA', 300.00, 2, 2, 2, NULL, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-06T11:00:00', 'REALIZADA', 300.00, 3, 2, 2, NULL, 2);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-13T14:00:00', 'REALIZADA', 150.00, 4, 2, 1, 1, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-21T09:30:00', 'REALIZADA', 300.00, 5, 2, 3, NULL, 2);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-21T15:00:00', 'REALIZADA', 150.00, 6, 2, 1, 2, 1);
+
+-- Dr. Marcos Aurélio (ID 3) - 5 consultas
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-03T09:00:00', 'REALIZADA', 280.00, 1, 3, 2, NULL, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-07T10:00:00', 'REALIZADA', 140.00, 2, 3, 4, 1, 2);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-14T11:00:00', 'REALIZADA', 280.00, 3, 3, 2, NULL, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-22T14:00:00', 'REALIZADA', 140.00, 4, 3, 1, 2, 2);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-28T09:30:00', 'REALIZADA', 280.00, 5, 3, 2, NULL, 1);
+
+-- Dra. Carolina Ferraz (ID 4) - 4 consultas
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-04T09:00:00', 'REALIZADA', 160.00, 1, 4, 1, 1, 2);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-08T10:00:00', 'REALIZADA', 320.00, 2, 4, 3, NULL, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-15T11:00:00', 'REALIZADA', 160.00, 3, 4, 1, 2, 2);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-23T14:00:00', 'REALIZADA', 320.00, 4, 4, 2, NULL, 1);
+
+-- Dr. Pedro Álvares (ID 5) - 2 consultas
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-05T09:00:00', 'REALIZADA', 220.00, 6, 5, 2, NULL, 1);
+INSERT INTO consulta (data_hora_consulta, status, valor, pacienteid, medicoid, forma_pagamentoid, convenioid, recepcionistaid) VALUES ('2025-08-18T10:00:00', 'REALIZADA', 110.00, 7, 5, 1, 1, 2);

@@ -17,9 +17,13 @@ import br.com.smartmed.consultas.rest.dto.relatorio.especialidadesFrequentes.Esp
 import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoOutDTO;
 import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoPorConvenioDTO;
 import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoPorFormaPagamentoDTO;
+import br.com.smartmed.consultas.rest.dto.topMedicos.MedicoRankingDTO;
+import br.com.smartmed.consultas.rest.dto.topMedicos.TopMedicosInDTO;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -430,5 +434,13 @@ public class ConsultaService {
                 "Consulta reagendada com sucesso",
                 consultaAtualizada.getDataHoraConsulta()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<MedicoRankingDTO> gerarRankingMedicos(TopMedicosInDTO dto) {
+        int tamanhoPagina = 5;
+        Pageable topMedicos = PageRequest.of(0, tamanhoPagina);
+
+        return consultaRepository.findRankingMedicos(dto.getMes(), dto.getAno(), topMedicos);
     }
 }

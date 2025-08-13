@@ -4,7 +4,9 @@ import br.com.smartmed.consultas.model.ConsultaModel;
 import br.com.smartmed.consultas.rest.dto.relatorio.especialidadesFrequentes.EspecialidadeFrequenteOutDTO;
 import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoPorConvenioDTO;
 import br.com.smartmed.consultas.rest.dto.relatorio.faturamento.FaturamentoPorFormaPagamentoDTO;
+import br.com.smartmed.consultas.rest.dto.topMedicos.MedicoRankingDTO;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -88,4 +90,18 @@ public interface ConsultaRepository extends JpaRepository<ConsultaModel, Long>, 
             "GROUP BY cnv.nome " +
             "ORDER BY cnv.nome")
     List<FaturamentoPorConvenioDTO> buscarFaturamentoPorConvenio(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
+
+    // top medicos
+    @Query("SELECT new br.com.smartmed.consultas.rest.dto.topMedicos.MedicoRankingDTO(m.nome, COUNT(c.id)) " +
+            "FROM ConsultaModel c JOIN c.medico m " +
+            "WHERE c.status = 'REALIZADA' " +
+            "AND EXTRACT(YEAR FROM c.dataHoraConsulta) = :ano " +
+            "AND EXTRACT(MONTH FROM c.dataHoraConsulta) = :mes " +
+            "GROUP BY m.nome " +
+            "ORDER BY COUNT(c.id) DESC")
+    List<MedicoRankingDTO> findRankingMedicos(
+            @Param("mes") int mes,
+            @Param("ano") int ano,
+            Pageable pageable
+    );
 }

@@ -12,6 +12,8 @@ import br.com.smartmed.consultas.rest.dto.reagendamento.ReagendamentoInDTO;
 import br.com.smartmed.consultas.rest.dto.reagendamento.ReagendamentoOutDTO;
 import br.com.smartmed.consultas.rest.dto.relatorio.RelatorioInDTO;
 import br.com.smartmed.consultas.rest.dto.relatorio.especialidadesFrequentes.EspecialidadeFrequenteOutDTO;
+import br.com.smartmed.consultas.rest.dto.topMedicos.MedicoRankingDTO;
+import br.com.smartmed.consultas.rest.dto.topMedicos.TopMedicosInDTO;
 import br.com.smartmed.consultas.service.ConsultaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +106,13 @@ public class ConsultaController {
         ConsultaDTO consultaDTO = consultaService.salvar(novaConsulta);
         return ResponseEntity.status(HttpStatus.CREATED).body(consultaDTO);
     }
+
+    @PostMapping("/medicos-mais-ativos")
+    public ResponseEntity<List<MedicoRankingDTO>> gerarRelatorioMedicosMaisAtivos(@Valid @RequestBody TopMedicosInDTO dto) {
+        List<MedicoRankingDTO> ranking = consultaService.gerarRankingMedicos(dto);
+        return ResponseEntity.ok(ranking);
+    }
+
     @PostMapping("/especialidades-frequentes")
     public ResponseEntity<List<EspecialidadeFrequenteOutDTO>> gerarRelatorioEspecialidades(@Valid @RequestBody RelatorioInDTO inDTO) {
         List<EspecialidadeFrequenteOutDTO> relatorio = consultaService.gerarRelatorioEspecialidadesFrequentes(inDTO);
