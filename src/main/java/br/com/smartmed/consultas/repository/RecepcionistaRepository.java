@@ -16,21 +16,21 @@ import java.util.Optional;
 public interface RecepcionistaRepository extends JpaRepository<RecepcionistaModel, Integer> {
     Optional<RecepcionistaModel> findByCpf(String cpf);
     List<RecepcionistaModel> findAllByNomeContainingIgnoreCase(String nome);
-    List<RecepcionistaModel> findAllByStatus(String status);
+    List<RecepcionistaModel> findAllByAtivo(boolean ativo);
 
     boolean existsByCpf(String cpf);
 
     @Query(value = "SELECT * FROM recepcionista r " +
-            "WHERE (:status IS NULL OR r.status = :status) " +
+            "WHERE (:ativo IS NULL OR r.ativo = :ativo) " +
             "AND (:dataInicio IS NULL OR r.data_admissao >= :dataInicio) " +
             "AND (:dataFim IS NULL OR r.data_admissao <= :dataFim)",
             countQuery = "SELECT count(*) FROM recepcionista r " +
-                    "WHERE (:status IS NULL OR r.status = :status) " +
+                    "WHERE (:ativo IS NULL OR r.ativo = :ativo) " +
                     "AND (:dataInicio IS NULL OR r.data_admissao >= :dataInicio) " +
                     "AND (:dataFim IS NULL OR r.data_admissao <= :dataFim)",
             nativeQuery = true)
     Page<RecepcionistaModel> filtrar(
-            @Param("status") String status,
+            @Param("ativo") boolean ativo,
             @Param("dataInicio") LocalDate dataInicio,
             @Param("dataFim") LocalDate dataFim,
             Pageable pageable

@@ -27,7 +27,7 @@ public class RecepcionistaService {
     @Transactional(readOnly = true)
     public RespostaPaginadaDTO<RecepcionistaDTO> filtrar(ListarRecepcionistaDTO dto) {
         Page<RecepcionistaModel> pagina = recepcionistaRepository.filtrar(
-                dto.getStatus(),
+                dto.getAtivo(),
                 dto.getDataInicio(),
                 dto.getDataFim(),
                 dto.toPageable()
@@ -65,8 +65,8 @@ public class RecepcionistaService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecepcionistaDTO> obterTodosPorStatus(String status) {
-        List<RecepcionistaModel> recepcionistas = recepcionistaRepository.findAllByStatus(status);
+    public List<RecepcionistaDTO> obterTodosPorStatus(boolean ativo) {
+        List<RecepcionistaModel> recepcionistas = recepcionistaRepository.findAllByAtivo(ativo);
         return recepcionistas.stream()
                 .map(recepcionista -> modelMapper.map(recepcionista, RecepcionistaDTO.class))
                 .collect(Collectors.toList());

@@ -4,6 +4,8 @@ import br.com.smartmed.consultas.model.ConsultaModel;
 import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoInDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoOutDTO;
+import br.com.smartmed.consultas.rest.dto.cadastrar.CadastrarConsultaInDTO;
+import br.com.smartmed.consultas.rest.dto.cadastrar.CadastrarConsultaOutDTO;
 import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaResponseDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoInDTO;
@@ -17,6 +19,7 @@ import br.com.smartmed.consultas.rest.dto.topMedicos.TopMedicosInDTO;
 import br.com.smartmed.consultas.service.ConsultaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -110,24 +113,30 @@ public class ConsultaController {
     @PostMapping("/medicos-mais-ativos")
     public ResponseEntity<List<MedicoRankingDTO>> gerarRelatorioMedicosMaisAtivos(@Valid @RequestBody TopMedicosInDTO dto) {
         List<MedicoRankingDTO> ranking = consultaService.gerarRankingMedicos(dto);
-        return ResponseEntity.ok(ranking);
+        return ResponseEntity.status(HttpStatus.OK).body(ranking);
     }
 
     @PostMapping("/especialidades-frequentes")
     public ResponseEntity<List<EspecialidadeFrequenteOutDTO>> gerarRelatorioEspecialidades(@Valid @RequestBody RelatorioInDTO inDTO) {
         List<EspecialidadeFrequenteOutDTO> relatorio = consultaService.gerarRelatorioEspecialidadesFrequentes(inDTO);
-        return ResponseEntity.ok(relatorio);
+        return ResponseEntity.status(HttpStatus.OK).body(relatorio);
+    }
+
+    @PostMapping("/cadastrar")
+    public ResponseEntity<CadastrarConsultaOutDTO> cadastrar(@Valid @RequestBody CadastrarConsultaInDTO inDTO) {
+        CadastrarConsultaOutDTO consultaCadastrada = consultaService.cadastrarComRecepcionista(inDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(consultaCadastrada);
     }
 
     @PutMapping("/cancelar")
     public ResponseEntity<CancelarConsultaResponseDTO> cancelarConsulta(@Valid @RequestBody CancelarConsultaDTO dto) {
         CancelarConsultaResponseDTO response = consultaService.cancelar(dto);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     @PutMapping("/reagendar")
     public ResponseEntity<ReagendamentoOutDTO> reagendarConsulta(@Valid @RequestBody ReagendamentoInDTO inDTO) {
         ReagendamentoOutDTO response = consultaService.reagendarConsulta(inDTO);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     @PutMapping()
     public ResponseEntity<ConsultaDTO> atualizar(@Valid @RequestBody ConsultaModel consultaExistente) {

@@ -6,6 +6,8 @@ import br.com.smartmed.consultas.repository.*;
 import br.com.smartmed.consultas.rest.dto.ConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoInDTO;
 import br.com.smartmed.consultas.rest.dto.agendamento.AgendamentoAutomaticoOutDTO;
+import br.com.smartmed.consultas.rest.dto.cadastrar.CadastrarConsultaInDTO;
+import br.com.smartmed.consultas.rest.dto.cadastrar.CadastrarConsultaOutDTO;
 import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaDTO;
 import br.com.smartmed.consultas.rest.dto.cancelamento.CancelarConsultaResponseDTO;
 import br.com.smartmed.consultas.rest.dto.historico.HistoricoInDTO;
@@ -442,5 +444,46 @@ public class ConsultaService {
         Pageable topMedicos = PageRequest.of(0, tamanhoPagina);
 
         return consultaRepository.findRankingMedicos(dto.getMes(), dto.getAno(), topMedicos);
+    }
+
+    @Transactional
+    public CadastrarConsultaOutDTO cadastrarComRecepcionista(CadastrarConsultaInDTO dto) {
+        RecepcionistaModel recepcionista = recepcionistaRepository.findById(dto.getRecepcionistaID())
+                .orElseThrow(() -> new ObjectNotFoundException("Recepcionista com ID " + dto.getRecepcionistaID() + " não encontrado."));
+
+        if (!recepcionista.isAtivo() || recepcionista.isBloqueado()) {
+            throw new BusinessRuleException("Ação não permitida. O recepcionista " + recepcionista.getNome() + " está inativo ou bloqueado.");
+        }
+
+        PacienteModel paciente = pacienteRepository.findById(dto.getPacienteID())
+                .orElseThrow(() -> new ObjectNotFoundException("Paciente não encontrado."));
+        MedicoModel medico = medicoRepository.findById(dto.getMedicoID())
+                .orElseThrow(() -> new ObjectNotFoundException("Médico não encontrado."));
+        FormaPagamentoModel formaPagamento = formaPagamentoRepository.findById(dto.getFormaPagamentoID())
+                .orElseThrow(() -> new ObjectNotFoundException("Forma de pagamento não encontrada."));
+
+        ConsultaModel novaConsulta = new ConsultaModel();
+        novaConsulta.setPaciente(paciente);
+        novaConsulta.setMedico(medico);
+        novaConsulta.setRecepcionista(recepcionista);
+        novaConsulta.setFormaPagamento(formaPagamento);
+        novaConsulta.setDataHoraConsulta(dto.getDataHora());
+        novaConsulta.setStatus("AGENDADA");
+
+        float valorConsulta = medico.getValorConsultaReferencia();
+        if (dto.getConvenioID() != null && dto.getConvenioID() != 0) {
+            ConvenioModel convenio = convenioRepository.findById(dto.getConvenioID())
+                    .orElseThrow(() -> new ObjectNotFoundException("Convênio não encontrado."));
+            novaConsulta.setConvenio(convenio);
+            valorConsulta *= 0.5f;
+        }
+        novaConsulta.setValor(valorConsulta);
+
+        salvar(novaConsulta);
+
+        return new CadastrarConsultaOutDTO(
+                "Consulta agendada com sucesso",
+                novaConsulta.getStatus()
+        );
     }
 }

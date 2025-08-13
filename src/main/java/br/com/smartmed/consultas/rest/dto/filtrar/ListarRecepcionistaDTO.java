@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Data
 public class ListarRecepcionistaDTO {
-    private String status;
+    private boolean ativo;
     private LocalDate dataInicio;
     private LocalDate dataFim;
     private Integer pagina = 0;
@@ -16,5 +16,8 @@ public class ListarRecepcionistaDTO {
 
     public Pageable toPageable() {
         return PageRequest.of(this.pagina, this.tamanhoPagina);
+    }
+    public boolean getAtivo() {
+        return this.ativo;
     }
 }
