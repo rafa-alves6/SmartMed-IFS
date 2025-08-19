@@ -396,7 +396,7 @@ public class ConsultaService {
 
     @Transactional
     public ReagendamentoOutDTO reagendarConsulta(ReagendamentoInDTO inDTO) {
-        // A nova data deve ser no futuro
+        // A nova data deve ser pelo menos 1 min no futuro
         if (inDTO.getNovaDataHora().isBefore(LocalDateTime.now().plusMinutes(1))) {
             throw new BusinessRuleException("A data de reagendamento deve ser no futuro.");
         }
@@ -445,7 +445,6 @@ public class ConsultaService {
 
         return consultaRepository.findRankingMedicos(dto.getMes(), dto.getAno(), topMedicos);
     }
-
     @Transactional
     public CadastrarConsultaOutDTO cadastrarComRecepcionista(CadastrarConsultaInDTO dto) {
         RecepcionistaModel recepcionista = recepcionistaRepository.findById(dto.getRecepcionistaID())

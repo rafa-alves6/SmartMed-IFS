@@ -21,13 +21,16 @@ public class RelatorioController {
     private ConsultaService consultaService;
 
     @GetMapping("/faturamento")
-    public ResponseEntity<FaturamentoOutDTO> gerarRelatorioFaturamento(@RequestParam("dataInicio")
-                                                                     @DateTimeFormat(pattern = "yyyy-MM-dd")
-                                                                     LocalDate dataInicio,
+    public ResponseEntity<FaturamentoOutDTO> gerarRelatorioFaturamento
+(
+    @RequestParam("dataInicio")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    LocalDate dataInicio,
 
-                                                                       @RequestParam("dataFim")
-                                                                     @DateTimeFormat(pattern = "yyyy-MM-dd")
-                                                                     LocalDate dataFim)
+    @RequestParam("dataFim")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    LocalDate dataFim
+)
     {
         FaturamentoOutDTO relatorio = consultaService.gerarRelatorioFaturamento(dataInicio, dataFim);
         return ResponseEntity.status(HttpStatus.OK).body(relatorio);

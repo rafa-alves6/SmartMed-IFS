@@ -2,6 +2,7 @@ package br.com.smartmed.consultas.rest.dto.cadastrar;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Data

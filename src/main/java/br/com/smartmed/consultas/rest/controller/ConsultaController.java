@@ -19,7 +19,6 @@ import br.com.smartmed.consultas.rest.dto.topMedicos.TopMedicosInDTO;
 import br.com.smartmed.consultas.service.ConsultaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
