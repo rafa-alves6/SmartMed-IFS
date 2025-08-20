@@ -3,6 +3,8 @@ package br.com.smartmed.consultas.service;
 import br.com.smartmed.consultas.exception.*;
 import br.com.smartmed.consultas.model.UsuarioModel;
 import br.com.smartmed.consultas.repository.UsuarioRepository;
+import br.com.smartmed.consultas.rest.dto.login.LoginInDTO;
+import br.com.smartmed.consultas.rest.dto.login.LoginOutDTO;
 import br.com.smartmed.consultas.rest.dto.login.UsuarioInDTO;
 import br.com.smartmed.consultas.rest.dto.login.UsuarioOutDTO;
 import org.modelmapper.ModelMapper;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +25,30 @@ public class UsuarioService {
     private ModelMapper modelMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Transactional(readOnly = true)
+    public LoginOutDTO login(LoginInDTO loginRequest) {
+        UsuarioModel usuario = usuarioRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new BusinessRuleException("Email ou senha inválidos."));
+
+        boolean senhaCorreta = passwordEncoder.matches(loginRequest.getSenha(), usuario.getSenha());
+
+        if (!senhaCorreta) {
+            throw new BusinessRuleException("Email o usenha inválidos.");
+        }
+
+        LoginOutDTO.UsuarioInfo usuarioInfo = new LoginOutDTO.UsuarioInfo(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getPerfil()
+        );
+
+        // Gera um token fictício para a resposta
+        String tokenFicticio = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + UUID.randomUUID();
+
+        return new LoginOutDTO("Login realizado com sucesso", usuarioInfo, tokenFicticio);
+    }
+
 
     @Transactional(readOnly = true)
     public UsuarioInDTO obterPorId(int id) {

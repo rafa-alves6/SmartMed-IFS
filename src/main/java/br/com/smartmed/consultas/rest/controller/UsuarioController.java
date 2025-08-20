@@ -1,6 +1,8 @@
 package br.com.smartmed.consultas.rest.controller;
 
 import br.com.smartmed.consultas.model.UsuarioModel;
+import br.com.smartmed.consultas.rest.dto.login.LoginInDTO;
+import br.com.smartmed.consultas.rest.dto.login.LoginOutDTO;
 import br.com.smartmed.consultas.rest.dto.login.UsuarioInDTO;
 import br.com.smartmed.consultas.rest.dto.login.UsuarioOutDTO;
 import br.com.smartmed.consultas.service.UsuarioService;
@@ -17,6 +19,12 @@ import java.util.List;
 public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginOutDTO> login(@RequestBody LoginInDTO loginRequest) {
+        LoginOutDTO response = usuarioService.login(loginRequest);
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<UsuarioInDTO> buscarPorId(@PathVariable Integer id) {

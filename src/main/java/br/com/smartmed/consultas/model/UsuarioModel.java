@@ -30,5 +30,6 @@ public class UsuarioModel {
 
     @Column(nullable = false)
     @NotNull(message = "Perfil não pode ser nulo")
+    @Enumerated(EnumType.STRING)
     private Cargos perfil;
 }
